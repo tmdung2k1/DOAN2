@@ -1,0 +1,21 @@
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Thiết lập màu chủ đạo */
+:root {
+  --primary-color: #10499e; 
+  --secondary-color: #663399; 
+  --white-color: #FFFFFF; 
+  --bg-light: #F8F9FA; 
+}
+
+body {
+  background-color: var(--bg-light);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Các class dùng chung cho màu sắc */
+.text-primary-custom { color: var(--primary-color) !important; }
+.text-secondary-custom { color: var(--secondary-color) !important; }
+.bg-primary-custom { background-color: var(--primary-color) !important; color: var(--white-color); }
+.bg-secondary-custom { background-color: var(--secondary-color) !important; color: var(--white-color); }

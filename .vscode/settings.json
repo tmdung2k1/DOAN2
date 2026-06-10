@@ -1,0 +1,7 @@
+{
+    "terminal.integrated.allowChainedQuote": false,
+    "terminal.integrated.allowMnemonics": true,
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
