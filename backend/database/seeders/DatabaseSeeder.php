@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\TaiKhoan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,17 +20,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $now = Carbon::now();
-        //Tao Tk admin
-        $adminId = DB::table('tai_khoan')->insertGetId([
-            'la_admin' => 1,
+
+        // Xóa dữ liệu cũ
+        TaiKhoan::truncate();
+
+        // Tạo tài khoản Quản trị hệ thống
+        $admin = TaiKhoan::create([
             'ho_ten' => 'Trần Minh Dững',
-            'email' => 'admin@nhatro.com',
+            'email' => 'admin@chutro.com',
             'so_dien_thoai' => '0987654321',
-            'mat_khau' => Hash::make('123456'), // Mật khẩu là 123456
+            'mat_khau' => Hash::make('password123'),
             'trang_thai' => 1,
-            'created_at' => $now,
-            'updated_at' => $now,
         ]);
+
         //Tao TT Tro 
         $nhaTroId = DB::table('nha_tro')->insertGetId([
             'ten_nha_tro' => 'Nhà Trọ Cao Cấp',
