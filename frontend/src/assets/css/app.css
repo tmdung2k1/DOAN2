@@ -1,0 +1,45 @@
+.bg-dark-blue {
+    background-color: #0A192F !important;
+}
+.text-dark-blue{
+    color:#0A192F;
+}
+.bg-purple{
+    background-color: #663399 !important;
+}
+.text-purple{
+    color: #663399;
+}
+.hero-section{
+    background: linear-gradient(135deg, #0A192F 0%, #663399 100%);
+    height: 220px;
+
+}
+.filter-box{
+    background-color: #ffffff;
+    border-radius: 12px;
+}
+.custom-input{
+    border-color: #e1dbec;
+    border-radius:6px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+.custom-input:focus{
+    border-color: #663399;
+    box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.15);
+}
+/* Animation mượt mà */
+.fade-in {
+    animation: fadeIn ease 1.5s;
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
