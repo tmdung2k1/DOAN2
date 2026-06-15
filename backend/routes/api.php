@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TrangChuController;
 use App\Http\Controllers\Api\XacThucController;
+use App\Http\Controllers\Api\PhongController;
 
 // API lấy danh sách phòng trống để hiển thị ở trang chủ
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
@@ -16,4 +17,10 @@ Route::middleware('auth:sanctum')
         Route::get('/admin/thong-tin', function (Request $request) {
             return $request->user();
         });
+        //Quản lý phòng
+        Route::get('/admin/phong', [PhongController::class, 'index']);
+        Route::get('/admin/loai-phong', [PhongController::class, 'getLoaiPhong']);
+        Route::post('/admin/phong', [PhongController::class, 'store']);
+        Route::put('/admin/phong/{id}', [PhongController::class, 'update']);
+        Route::delete('/admin/phong/{id}', [PhongController::class, 'destroy']);
     });
