@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import QuanLyPhong from '../components/QuanLyPhong.vue'
+import QuanLyLoaiPhong from '../components/QuanLyLoaiPhong.vue'
 const router = useRouter()
 const tabHienTai = ref('phong-tro') 
 
@@ -14,14 +15,20 @@ const xuLyDangXuat = () => {
 <template>
   <div class="d-flex dashboard-layout">
     <div class="bg-dark-blue text-white p-3 sidebar">
-      <h4 class="fw-bold mb-4 mt-2 border-bottom pb-3 text-center text-uppercase">Bảng Điều Khiển</h4>
+      <h4 class="fw-bold mb-4 mt-2 border-bottom pb-3 text-center text-uppercase">Dashboard</h4>
       <ul class="nav flex-column gap-2">
         <li class="nav-item">
-          <!-- Khi click vào đổi trạng thái tabHienTai -->
           <a @click.prevent="tabHienTai = 'phong-tro'" 
              :class="['nav-link text-white fw-bold px-3 py-2', tabHienTai === 'phong-tro' ? 'bg-purple rounded' : '']" 
              href="#">
             Quản lý Phòng Trọ
+          </a>
+        </li>
+        <li class="nav-item">
+          <a @click.prevent="tabHienTai = 'loai-phong'" 
+             :class="['nav-link text-white fw-bold px-3 py-2', tabHienTai === 'loai-phong' ? 'bg-purple rounded' : '']" 
+             href="#">
+            Quản lý Loại Phòng
           </a>
         </li>
         <li class="nav-item">
@@ -41,9 +48,9 @@ const xuLyDangXuat = () => {
       </div>
       
       <div class="px-4 pb-4">
-        <!-- Nếu tabHienTai = 'phong-tro' thì load Component bảng lên -->
+      
         <QuanLyPhong v-if="tabHienTai === 'phong-tro'" />
-        
+        <QuanLyLoaiPhong v-else-if="tabHienTai === 'loai-phong'" />
         <div v-else-if="tabHienTai === 'cai-dat'" class="card border-0 shadow-sm p-5 text-center text-muted">
           <h4 class="fw-bold text-dark-blue">Tính năng Cài đặt Điện/Nước đang phát triển...</h4>
         </div>
