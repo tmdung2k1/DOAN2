@@ -57,7 +57,7 @@ const moModalThem = () => {
 
 const moModalSua = (phong) => {
   laCheDoSua.value = true
-  formPhong.value = { ...phong } // Copy dữ liệu phòng vào form
+  formPhong.value = { ...phong } 
   hienThiModal.value = true
 }
 

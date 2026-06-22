@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('cai_dat', function (Blueprint $table) {
             $table->id();
-            $table->string('khoa_cai_dat', 100)->unique(); // Ví dụ: gia_dien, ngon_ngu_mac_dinh
-            $table->text('gia_tri');
-            $table->string('mo_ta', 255)->nullable();
+            $table->integer('gia_dien')->default(3500); // Giá điện (VNĐ/kWh)
+            $table->integer('gia_nuoc')->default(15000); // Giá nước (VNĐ/khối)
             $table->timestamps();
         });
     }
