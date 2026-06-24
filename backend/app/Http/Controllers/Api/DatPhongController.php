@@ -16,7 +16,14 @@ class DatPhongController extends Controller
         // Sử dụng Join để lấy luôn số phòng từ bảng phong sang hiển thị
         $danhSach = DB::table('dat_phong')
             ->join('phong', 'dat_phong.phong_id', '=', 'phong.id')
-            ->select('dat_phong.*', 'phong.so_phong')
+            ->join('tai_khoans', 'dat_phong.khach_id', '=', 'tai_khoans.id')
+            ->select(
+                'dat_phong.*',
+                'phong.so_phong',
+                'tai_khoans.ho_ten',
+                'tai_khoans.so_dien_thoai',
+                'tai_khoans.email'
+            )
             ->orderBy('dat_phong.created_at', 'desc')
             ->get();
 
@@ -33,32 +40,32 @@ class DatPhongController extends Controller
         if (!$yeuCau) {
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy yêu cầu!'], 404);
         }
+        $yeuCau->update(['trang_thai' => 'da_coc']);
 
-       
-        $yeuCau->update(['trang_thai' => 'da_duyet']);
-
-        
-        Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'da_thue']);
+        Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'dat_truoc']);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Đã duyệt yêu cầu đặt phòng và cập nhật trạng thái phòng!'
+            'message' => 'Đã duyệt yêu cầu đặt phòng (Trạng thái: Đã cọc)!'
         ]);
     }
 
     // Xử lý Từ chối đặt phòng
     public function tuChoi($id)
     {
-        $yeuCau = DatPhong::find($id);
+       $yeuCau = DatPhong::find($id);
         if (!$yeuCau) {
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy yêu cầu!'], 404);
         }
 
-        $yeuCau->update(['trang_thai' => 'tu_choi']);
+        $yeuCau->update(['trang_thai' => 'huy']);
+
+        // (Tùy chọn) Trả lại trạng thái phòng thành 'trong' nếu cần thiết
+        Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'trong']);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Đã từ chối yêu cầu đặt phòng này.'
+            'message' => 'Đã từ chối (hủy) yêu cầu đặt phòng này.'
         ]);
     }
 }

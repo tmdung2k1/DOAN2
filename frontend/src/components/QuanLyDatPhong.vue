@@ -72,12 +72,13 @@ onMounted(() => layDanhSachYeuCau())
             <td class="fw-bold text-secondary">{{ yc.so_dien_thoai }}</td>
             <td><span class="badge bg-purple-light text-purple px-2 py-1 fs-6">Phòng {{ yc.so_phong }}</span></td>
             <td>
-              <span v-if="yc.trang_thai === 'cho_duyet'" class="badge bg-warning text-dark fw-bold">Chờ Duyệt</span>
-              <span v-else-if="yc.trang_thai === 'da_duyet'" class="badge bg-success fw-bold">Đã Duyệt</span>
-              <span v-else class="badge bg-danger fw-bold">Từ Chối</span>
+              <span v-if="yc.trang_thai === 'cho_xac_nhan'" class="badge bg-warning text-dark fw-bold">Chờ Xác Nhận</span>
+              <span v-else-if="yc.trang_thai === 'da_coc'" class="badge bg-success fw-bold">Đã Cọc</span>
+              <span v-else-if="yc.trang_thai === 'da_nhan_phong'" class="badge bg-primary fw-bold">Đã Nhận Phòng</span>
+              <span v-else-if="yc.trang_thai === 'huy'" class="badge bg-danger fw-bold">Đã Hủy</span>
             </td>
             <td class="text-end pe-4">
-              <div v-if="yc.trang_thai === 'cho_duyet'">
+              <div v-if="yc.trang_thai === 'cho_xac_nhan'">
                 <button @click="xuLyHànhDong(yc.id, 'duyet')" class="btn btn-sm btn-success fw-bold me-2 px-3">Duyệt</button>
                 <button @click="xuLyHànhDong(yc.id, 'tu-choi')" class="btn btn-sm btn-outline-danger fw-bold px-2">Từ chối</button>
               </div>

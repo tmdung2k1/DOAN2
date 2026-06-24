@@ -5,6 +5,7 @@ import QuanLyPhong from '../components/QuanLyPhong.vue'
 import QuanLyLoaiPhong from '../components/QuanLyLoaiPhong.vue'
 import QuanLyDatPhong from '../components/QuanLyDatPhong.vue'
 import CaiDatHeThong from '../components/CaiDatHeThong.vue'
+import QuanLyHopDong from '../components/QuanLyHopDong.vue'
 
 const router = useRouter()
 const tabHienTai = ref('phong-tro')
@@ -57,6 +58,13 @@ const toggleSidebar = () => {
           </a>
         </li>
         <li class="nav-item">
+  <a @click.prevent="tabHienTai = 'hop-dong'" 
+     :class="['nav-link text-white fw-bold px-3 py-2', tabHienTai === 'hop-dong' ? 'bg-purple rounded' : '']" 
+     href="#">
+    Quản lý Hợp Đồng
+  </a>
+</li>
+        <li class="nav-item">
           <a @click.prevent="moModalCaiDat = true" 
              :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2']" 
              href="#">
@@ -74,14 +82,13 @@ const toggleSidebar = () => {
       </div>
       
       <div class="px-4 pb-4">
-      
         <QuanLyPhong v-if="tabHienTai === 'phong-tro'" />
         <QuanLyLoaiPhong v-else-if="tabHienTai === 'loai-phong'" />
         <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" /> 
+        <QuanLyHopDong v-else-if="tabHienTai === 'hop-dong'" />
       </div>
     </div>
 
-    <!-- Modal Cài đặt Hệ Thống -->
     <CaiDatHeThong :isOpen="moModalCaiDat" @close="moModalCaiDat = false" />
   </div>
 </template>

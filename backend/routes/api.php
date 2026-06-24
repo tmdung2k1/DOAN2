@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PhongController;
 use App\Http\Controllers\Api\LoaiPhongController;
 use App\Http\Controllers\Api\DatPhongController;
 use App\Http\Controllers\Api\CaiDatController;
+use App\Http\Controllers\Api\HopDongController;
 
 // API lấy danh sách phòng trống để hiển thị ở trang chủ
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
@@ -42,4 +43,9 @@ Route::middleware('auth:sanctum')
         // Quản lý cài đặt hệ thống
         Route::get('/admin/cai-dat', [CaiDatController::class, 'layCaiDat']);
         Route::post('/admin/cai-dat', [CaiDatController::class, 'luuCaiDat']);
+
+        // Quản lý Hợp Đồng
+        Route::get('/admin/hop-dong', [HopDongController::class, 'index']);
+        Route::post('/admin/hop-dong', [HopDongController::class, 'store']);
+        Route::put('/admin/hop-dong/{id}/huy', [HopDongController::class, 'huyHopDong']);
     });
