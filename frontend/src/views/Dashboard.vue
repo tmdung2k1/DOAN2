@@ -6,6 +6,7 @@ import QuanLyLoaiPhong from '../components/QuanLyLoaiPhong.vue'
 import QuanLyDatPhong from '../components/QuanLyDatPhong.vue'
 import CaiDatHeThong from '../components/CaiDatHeThong.vue'
 import QuanLyHopDong from '../components/QuanLyHopDong.vue'
+import QuanLyDienNuoc from '../components/QuanLyDienNuoc.vue'
 
 const router = useRouter()
 const tabHienTai = ref('phong-tro')
@@ -58,12 +59,21 @@ const toggleSidebar = () => {
           </a>
         </li>
         <li class="nav-item">
-  <a @click.prevent="tabHienTai = 'hop-dong'" 
-     :class="['nav-link text-white fw-bold px-3 py-2', tabHienTai === 'hop-dong' ? 'bg-purple rounded' : '']" 
-     href="#">
-    Quản lý Hợp Đồng
-  </a>
-</li>
+          <a @click.prevent="tabHienTai = 'hop-dong'" 
+             :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2', tabHienTai === 'hop-dong' ? 'active-menu' : '']" 
+             href="#">
+            <i class="bi bi-file-earmark-text"></i>
+            <span v-if="!sidebarThuGon">Quản lý Hợp Đồng</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a @click.prevent="tabHienTai = 'dien-nuoc'" 
+            :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2', tabHienTai === 'dien-nuoc' ? 'active-menu' : '']" 
+            href="#">
+            <i class="bi bi-lightning-charge"></i>
+            <span v-if="!sidebarThuGon">Chỉ Số Điện Nước</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a @click.prevent="moModalCaiDat = true" 
              :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2']" 
@@ -86,6 +96,7 @@ const toggleSidebar = () => {
         <QuanLyLoaiPhong v-else-if="tabHienTai === 'loai-phong'" />
         <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" /> 
         <QuanLyHopDong v-else-if="tabHienTai === 'hop-dong'" />
+        <QuanLyDienNuoc v-else-if="tabHienTai === 'dien-nuoc'" />
       </div>
     </div>
 
@@ -94,105 +105,59 @@ const toggleSidebar = () => {
 </template>
 
 <style scoped>
-.dashboard-layout { 
-  min-height: 100vh;
-}
+.dashboard-layout { min-height: 100vh; }
 
-.sidebar { 
+.sidebar {
   width: 260px;
+  background-color: #141414 !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.4);
 }
 
-.sidebar-thu-gon {
-  width: 80px;
-}
-
+.sidebar-thu-gon { width: 80px; }
 .sidebar-thu-gon h4,
-.sidebar-thu-gon span {
-  display: none;
-}
+.sidebar-thu-gon span { display: none; }
 
-.bg-dark-blue { 
-  background-color: #0A192F !important; 
-}
+.bg-dark-blue { background-color: #141414 !important; }
+.text-dark-blue { color: #2E6E7E !important; }
 
-.text-dark-blue { 
-  color: #0A192F !important; 
-}
-
-.nav {
-  flex: 1;
-  overflow: hidden;
-}
+.nav { flex: 1; overflow: hidden; }
 
 .nav-link {
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border-radius: 8px;
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  color: rgba(255,255,255,0.75) !important;
 }
-
-.nav-link::before {
-  display: none;
-}
-
-.nav-link:hover:not(.active-menu) { 
-  background-color: rgba(102, 51, 153, 0.3) !important;
+.nav-link:hover:not(.active-menu) {
+  background-color: rgba(0, 196, 160, 0.15) !important;
+  color: #00C4A0 !important;
   transform: translateX(4px);
 }
 
 .active-menu {
-  background: linear-gradient(135deg, #8B5CF6 0%, #663399 100%) !important;
-  box-shadow: 0 2px 8px rgba(102, 51, 153, 0.4) !important;
+  background: linear-gradient(135deg, #2E6E7E 0%, #00C4A0 100%) !important;
+  box-shadow: 0 2px 10px rgba(0, 196, 160, 0.35) !important;
   font-weight: 700;
+  color: #141414 !important;
 }
+.active-menu i { color: #141414 !important; }
 
-.nav-item {
-  transition: all 0.3s ease;
-}
+.nav-item { transition: all 0.3s ease; }
+.nav-link i { transition: all 0.3s ease; font-size: 1.1rem; }
 
-.main-content {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.main-content { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
-.btn {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.btn:hover { transform: translateY(-2px); }
 
-.btn:hover {
-  transform: translateY(-2px);
-}
-
-/* Scroll bar styling */
-.sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Icon styling */
-.nav-link i {
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 1.1rem;
-}
-
-.active-menu i {
-  color: #fff;
-}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(0, 196, 160, 0.3); border-radius: 2px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(0, 196, 160, 0.5); }
 </style>

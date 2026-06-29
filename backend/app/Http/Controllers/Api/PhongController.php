@@ -31,13 +31,26 @@ class PhongController extends Controller
     // 2. Thêm một phòng mới
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'so_phong' => 'required|unique:phong,so_phong',
-            'gia_thue' => 'required|numeric',
-            'gia_coc' => 'required|numeric',
-            'dien_tich' => 'required|numeric',
+            'gia_thue' => 'required|numeric|min:0',
+            'gia_coc' => 'required|numeric|min:0',
+            'dien_tich' => 'required|numeric|min:0',
             'loai_phong_id' => 'required|exists:loai_phong,id',
             'tang_id' => 'nullable|exists:tang,id',
+            'trang_thai' => 'nullable|in:trong,da_thue,dat_truoc,bao_tri',
+        ], [
+            'so_phong.required' => 'Vui lòng nhập số phòng.',
+            'so_phong.unique' => 'Số phòng đã tồn tại trên hệ thống.',
+            'gia_thue.required' => 'Vui lòng nhập giá thuê.',
+            'gia_thue.numeric' => 'Giá thuê phải là số.',
+            'gia_coc.required' => 'Vui lòng nhập tiền cọc.',
+            'gia_coc.numeric' => 'Tiền cọc phải là số.',
+            'dien_tich.required' => 'Vui lòng nhập diện tích.',
+            'dien_tich.numeric' => 'Diện tích phải là số.',
+            'loai_phong_id.required' => 'Vui lòng chọn loại phòng.',
+            'loai_phong_id.exists' => 'Loại phòng không hợp lệ.',
+            'trang_thai.in' => 'Trạng thái phòng không hợp lệ.',
         ]);
 
         $phong = Phong::create($request->except('id'));
@@ -55,6 +68,28 @@ class PhongController extends Controller
         if (!$phong) {
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy phòng!'], 404);
         }
+
+        $validated = $request->validate([
+            'so_phong' => 'required|unique:phong,so_phong,' . $id,
+            'gia_thue' => 'required|numeric|min:0',
+            'gia_coc' => 'required|numeric|min:0',
+            'dien_tich' => 'required|numeric|min:0',
+            'loai_phong_id' => 'required|exists:loai_phong,id',
+            'tang_id' => 'nullable|exists:tang,id',
+            'trang_thai' => 'nullable|in:trong,da_thue,dat_truoc,bao_tri',
+        ], [
+            'so_phong.required' => 'Vui lòng nhập số phòng.',
+            'so_phong.unique' => 'Số phòng đã tồn tại trên hệ thống.',
+            'gia_thue.required' => 'Vui lòng nhập giá thuê.',
+            'gia_thue.numeric' => 'Giá thuê phải là số.',
+            'gia_coc.required' => 'Vui lòng nhập tiền cọc.',
+            'gia_coc.numeric' => 'Tiền cọc phải là số.',
+            'dien_tich.required' => 'Vui lòng nhập diện tích.',
+            'dien_tich.numeric' => 'Diện tích phải là số.',
+            'loai_phong_id.required' => 'Vui lòng chọn loại phòng.',
+            'loai_phong_id.exists' => 'Loại phòng không hợp lệ.',
+            'trang_thai.in' => 'Trạng thái phòng không hợp lệ.',
+        ]);
 
         $phong->update($request->except('id'));
 

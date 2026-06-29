@@ -8,7 +8,7 @@ const token = localStorage.getItem('admin_token')
 
 const hienThiModal = ref(false)
 const laCheDoSua = ref(false)
-const formPhong = ref({ id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', tang_id: null })
+const formPhong = ref({ id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', tang_id: null })
 
 // Lấy danh sách loại phòng
 const layDanhSachLoaiPhong = async () => {
@@ -51,7 +51,7 @@ const layDanhSachPhong = async () => {
 
 const moModalThem = () => {
   laCheDoSua.value = false
-  formPhong.value = { id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', tang_id: null }
+  formPhong.value = { id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', tang_id: null }
   hienThiModal.value = true
 }
 
@@ -120,6 +120,16 @@ const layTenLoaiPhong = (loaiPhongId) => {
   return loaiPhong ? loaiPhong.ten_loai : 'Không xác định'
 }
 
+const dinhDangTrangThai = (trangThai) => {
+  const map = {
+    trong:     { label: 'Trống',     cls: 'badge-trong' },
+    da_thue:   { label: 'Đã Thuê',    cls: 'badge-da-thue' },
+    dat_truoc: { label: 'Đặt Trước', cls: 'badge-dat-truoc' },
+    bao_tri:   { label: 'Bảo Trì',   cls: 'badge-bao-tri' },
+  }
+  return map[trangThai] || { label: trangThai, cls: '' }
+}
+
 onMounted(() => {
   layDanhSachLoaiPhong()
   layDanhSachPhong()
@@ -147,6 +157,7 @@ onMounted(() => {
             <th class="py-3">Diện tích</th>
             <th class="py-3">Giá Thuê</th>
             <th class="py-3">Tiền Cọc</th>
+            <th class="py-3">Trạng Thái</th>
             <th class="text-end pe-4 py-3">Thao tác</th>
           </tr>
         </thead>
@@ -157,6 +168,9 @@ onMounted(() => {
             <td>{{ phong.dien_tich }} m²</td>
             <td class="fw-bold text-danger">{{ dinhDangTien(phong.gia_thue) }}</td>
             <td class="text-muted">{{ dinhDangTien(phong.gia_coc) }}</td>
+            <td>
+              <span :class="['badge', dinhDangTrangThai(phong.trang_thai).cls]">{{ dinhDangTrangThai(phong.trang_thai).label }}</span>
+            </td>
             <td class="text-end pe-4">
               <button @click="moModalSua(phong)" class="btn btn-sm btn-outline-primary fw-bold me-2">Sửa</button>
               <button @click="xoaPhong(phong.id, phong.so_phong)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
@@ -200,6 +214,15 @@ onMounted(() => {
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Tiền Cọc</label>
               <input v-model="formPhong.gia_coc" type="number" class="form-control custom-input" required>
             </div>
+            <div class="col-md-12">
+              <label class="form-label small fw-bold text-dark-blue text-uppercase">Trạng Thái Phòng</label>
+              <select v-model="formPhong.trang_thai" class="form-control custom-input" required>
+                <option value="trong">Trống</option>
+                <option value="da_thue">Đã Thuê</option>
+                <option value="dat_truoc">Đặt Trước</option>
+                <option value="bao_tri">Bảo Trì</option>
+              </select>
+            </div>
           </div>
           
           <div class="d-flex justify-content-end mt-4 pt-3 border-top">
@@ -213,28 +236,25 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.text-dark-blue { color: #0A192F; }
-.btn-purple { background-color: #663399; color: #fff; border: none; transition: 0.3s; }
-.btn-purple:hover { background-color: #0A192F; color: #fff; }
-.bg-purple-light { background-color: #f1ebf7; }
-.badge-loai-phong { background-color: #27ae60; color: #fff; font-weight: 500; padding: 0.5em 0.75em; }
+.text-dark-blue { color: #2E6E7E; }
+.btn-purple { background-color: #2E6E7E; color: #fff; border: none; transition: 0.25s; border-radius: 8px; }
+.btn-purple:hover { background-color: #00C4A0; color: #141414; }
+.badge-loai-phong { background-color: #2E6E7E; color: #fff; font-weight: 500; padding: 0.5em 0.75em; border-radius: 6px; }
 
-/* Modal CSS dùng chung */
+/* Badge trạng thái phòng */
+.badge-trong     { background-color: #d1fae5; color: #065f46; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
+.badge-da-thue   { background-color: #dbeafe; color: #1e40af; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
+.badge-dat-truoc { background-color: #fef9c3; color: #854d0e; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
+.badge-bao-tri   { background-color: #fee2e2; color: #991b1b; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
+
+/* Modal CSS */
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(10, 25, 47, 0.7); z-index: 9999;
+  background-color: rgba(20, 20, 20, 0.72); z-index: 9999;
 }
-.modal-content {
-  width: 90%; max-width: 600px; animation: slideDown 0.3s ease-out;
-}
-.custom-input {
-  border-color: #e1dbec; border-radius: 6px; outline: none; transition: 0.2s;
-}
-.custom-input:focus {
-  border-color: #663399; box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.15);
-}
-@keyframes slideDown {
-  0% { opacity: 0; transform: translateY(-30px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+.modal-content { width: 90%; max-width: 600px; animation: slideDown 0.3s ease-out; }
+.custom-input { border-color: #c2d9de; border-radius: 6px; outline: none; transition: 0.2s; }
+.custom-input:focus { border-color: #2E6E7E; box-shadow: 0 0 0 0.25rem rgba(46, 110, 126, 0.18); }
+@keyframes slideDown { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
 </style>
+

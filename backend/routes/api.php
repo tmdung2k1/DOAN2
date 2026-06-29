@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\LoaiPhongController;
 use App\Http\Controllers\Api\DatPhongController;
 use App\Http\Controllers\Api\CaiDatController;
 use App\Http\Controllers\Api\HopDongController;
+use App\Http\Controllers\Api\ChiSoDienNuocController;
 
 // API lấy danh sách phòng trống để hiển thị ở trang chủ
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
@@ -24,12 +25,11 @@ Route::middleware('auth:sanctum')
 
         //Quản lý phòng
         Route::get('/admin/phong', [PhongController::class, 'index']);
-        Route::get('/admin/loai-phong', [PhongController::class, 'getLoaiPhong']);
         Route::post('/admin/phong', [PhongController::class, 'store']);
         Route::put('/admin/phong/{id}', [PhongController::class, 'update']);
         Route::delete('/admin/phong/{id}', [PhongController::class, 'destroy']);
 
-        // API Quản lý Loại phòng 
+        // API Quản lý Loại phòng (Fix: xóa route trùng GET loai-phong từ PhongController)
         Route::get('/admin/loai-phong', [LoaiPhongController::class, 'index']);
         Route::post('/admin/loai-phong', [LoaiPhongController::class, 'store']);
         Route::put('/admin/loai-phong/{id}', [LoaiPhongController::class, 'update']);
@@ -44,8 +44,15 @@ Route::middleware('auth:sanctum')
         Route::get('/admin/cai-dat', [CaiDatController::class, 'layCaiDat']);
         Route::post('/admin/cai-dat', [CaiDatController::class, 'luuCaiDat']);
 
-        // Quản lý Hợp Đồng
+        // Quản lý Hợp Đồng (Fix: route cụ thể du-lieu-form đặt TRƯỚC route động {id})
+        Route::get('/admin/hop-dong/du-lieu-form', [HopDongController::class, 'layDuLieuTaoHopDong']);
         Route::get('/admin/hop-dong', [HopDongController::class, 'index']);
         Route::post('/admin/hop-dong', [HopDongController::class, 'store']);
         Route::put('/admin/hop-dong/{id}/huy', [HopDongController::class, 'huyHopDong']);
+        Route::get('/admin/hop-dong/{id}/pdf', [HopDongController::class, 'xuatPDF']);
+
+        // Quản lý Chỉ số Điện Nước
+        Route::get('/admin/dien-nuoc', [ChiSoDienNuocController::class, 'index']);
+        Route::post('/admin/dien-nuoc', [ChiSoDienNuocController::class, 'store']);
+        Route::delete('/admin/dien-nuoc/{id}', [ChiSoDienNuocController::class, 'destroy']);
     });

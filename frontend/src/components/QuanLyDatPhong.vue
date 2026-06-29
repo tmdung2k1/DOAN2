@@ -92,7 +92,7 @@ onMounted(() => layDanhSachYeuCau())
 </template>
 
 <style scoped>
-.text-dark-blue { color: #0A192F; }
-.text-purple { color: #663399; }
-.bg-purple-light { background-color: #f1ebf7; }
-</style>
+.text-dark-blue { color: #2E6E7E; }
+.text-purple { color: #00C4A0; }
+.bg-purple-light { background-color: #e0f8f4; }
+</style>

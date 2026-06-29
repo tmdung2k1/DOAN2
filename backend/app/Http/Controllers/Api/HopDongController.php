@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\HopDong;
 use App\Models\Phong;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class HopDongController extends Controller
 {
@@ -75,6 +77,44 @@ class HopDongController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Đã chấm dứt hợp đồng và giải phóng phòng!'
+        ]);
+    }
+    // Xuất file PDF hợp đồng
+    public function xuatPDF($id)
+    {
+        $hopDong = DB::table('hop_dong')
+            ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
+            ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
+            ->select('hop_dong.*', 'phong.so_phong', 'tai_khoans.ho_ten as ten_khach_hang', 'tai_khoans.so_dien_thoai')
+            ->where('hop_dong.id', $id)
+            ->first();
+
+        if (!$hopDong) {
+            return response()->json(['status' => 'error', 'message' => 'Không tìm thấy hợp đồng!'], 404);
+        }
+
+        // Tạo PDF từ view và truyền dữ liệu hợp đồng sang
+        $pdf = Pdf::loadView('hop_dong', ['hopDong' => $hopDong]);
+        
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download('HopDong_' . $hopDong->ma_hop_dong . '.pdf');
+    }
+    // Hàm lấy dữ liệu cho Form tạo Hợp đồng
+    public function layDuLieuTaoHopDong()
+    {
+        // lấy những phòng có trạng thái 'trong'
+        $phongs = \App\Models\Phong::where('trang_thai', 'trong')
+                    ->select('id', 'so_phong', 'gia_thue')
+                    ->get();
+        
+        // Lấy danh sách khách hàng
+        $khachs = DB::table('tai_khoans')->select('id', 'ho_ten', 'so_dien_thoai')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'phongs' => $phongs,
+            'khachs' => $khachs
         ]);
     }
 }

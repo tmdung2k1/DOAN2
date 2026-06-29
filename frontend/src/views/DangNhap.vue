@@ -143,7 +143,7 @@ const xuLyDangNhap = async () => {
 <style scoped>
 .login-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a192f 0%, #663399 100%);
+  background: linear-gradient(135deg, #141414 0%, #2E6E7E 65%, #00C4A0 100%);
 }
 .login-box {
   width: 100%;
@@ -152,39 +152,40 @@ const xuLyDangNhap = async () => {
   border-radius: 16px;
 }
 .text-dark-blue {
-  color: #0a192f;
+  color: #2E6E7E;
 }
 .text-purple {
-  color: #663399;
+  color: #00C4A0;
 }
 .custom-input {
-  border-color: #e1dbec;
+  border-color: #c2d9de;
   border-radius: 8px;
-  background-color: #f8f9fa;
+  background-color: #f4f7f8;
   outline: none;
   transition: all 0.2s ease-in-out;
 }
 .custom-input:focus {
-  border-color: #663399;
+  border-color: #2E6E7E;
   background-color: #ffffff;
-  box-shadow: 0 0 0 0.25rem rgba(102, 51, 153, 0.15);
+  box-shadow: 0 0 0 0.25rem rgba(46, 110, 126, 0.18);
 }
 .btn-dark-blue {
-  background-color: #0a192f;
+  background-color: #2E6E7E;
   color: #ffffff;
   border: none;
   transition: background-color 0.3s ease;
   border-radius: 8px;
 }
 .btn-dark-blue:hover:not(:disabled) {
-  background-color: #663399;
+  background-color: #00C4A0;
+  color: #141414;
 }
 .btn-dark-blue:disabled {
   opacity: 0.9;
   cursor: not-allowed;
 }
 .loading-btn {
-  background: linear-gradient(90deg, #0a192f 0%, #663399 100%);
+  background: linear-gradient(90deg, #2E6E7E 0%, #00C4A0 100%);
 }
 
 /* Loading Spinner Animation */
@@ -206,21 +207,12 @@ const xuLyDangNhap = async () => {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Fade in loading state */
 .fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
+.fade-leave-active { transition: opacity 0.3s ease; }
 .fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+.fade-leave-to { opacity: 0; }
 </style>

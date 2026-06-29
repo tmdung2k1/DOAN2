@@ -1,28 +1,31 @@
 /* Giao diện thẻ phòng trọ */
 .room-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden; /* Đảm bảo hình ảnh không vượt ra ngoài thẻ */
+    overflow: hidden;
     border: none;
-    background-color:#ffffff;
+    background-color: #ffffff;
 }
 .room-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(10, 25, 47, 0.15) !important;
+    box-shadow: 0 10px 24px rgba(46, 110, 126, 0.18) !important;
 }
 .room-img {
     height: 200px;
     object-fit: cover;
 }
 .bg-purple-light {
-    background-color: #f1ebf7;
+    background-color: #e0f8f4;
 }
+.text-purple { color: #00C4A0; }
+.text-dark-blue { color: #2E6E7E; }
 .btn-dark-blue {
-    background-color: #0A192F;
+    background-color: #2E6E7E;
     color: #ffffff;
     border: none;
     transition: background-color 0.3s ease;
+    border-radius: 8px;
 }
 .btn-dark-blue:hover {
-    background-color: #663399;
-    color: #ffffff;
-}
+    background-color: #00C4A0;
+    color: #141414;
+}

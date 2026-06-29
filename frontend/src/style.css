@@ -1,21 +1,82 @@
 /* Import Bootstrap CSS */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-/* Thiết lập màu chủ đạo */
+/* =============================================
+   BẢNG MÀU 4 MÀU THƯƠNG HIỆU
+   --clr-dark-teal : #2E6E7E  (teal đậm)
+   --clr-accent    : #00C4A0  (teal sáng)
+   --clr-dark      : #141414  (đen)
+   --clr-light     : #FFFFFF  (trắng)
+   ============================================= */
 :root {
-  --primary-color: #10499e; 
-  --secondary-color: #663399; 
-  --white-color: #FFFFFF; 
-  --bg-light: #F8F9FA; 
+  --clr-dark-teal:  #2E6E7E;
+  --clr-accent:     #00C4A0;
+  --clr-dark:       #141414;
+  --clr-light:      #FFFFFF;
+
+  /* Derived tints */
+  --clr-dark-teal-hover:  #245a68;
+  --clr-accent-hover:     #00a88a;
+  --clr-accent-light:     #e0f8f4;
+  --clr-dark-teal-light:  #e8f3f5;
+  --clr-bg:               #f4f7f8;
 }
 
 body {
-  background-color: var(--bg-light);
+  background-color: var(--clr-bg);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--clr-dark);
 }
 
-/* Các class dùng chung cho màu sắc */
-.text-primary-custom { color: var(--primary-color) !important; }
-.text-secondary-custom { color: var(--secondary-color) !important; }
-.bg-primary-custom { background-color: var(--primary-color) !important; color: var(--white-color); }
-.bg-secondary-custom { background-color: var(--secondary-color) !important; color: var(--white-color); }
+/* === Utility classes dùng chung === */
+.text-brand        { color: var(--clr-dark-teal) !important; }
+.text-accent       { color: var(--clr-accent) !important; }
+.bg-brand          { background-color: var(--clr-dark-teal) !important; color: var(--clr-light); }
+.bg-accent         { background-color: var(--clr-accent) !important; color: var(--clr-dark); }
+.bg-dark-custom    { background-color: var(--clr-dark) !important; color: var(--clr-light); }
+
+/* Backward-compat aliases (giữ cho các component cũ) */
+.text-dark-blue    { color: var(--clr-dark-teal) !important; }
+.text-purple       { color: var(--clr-accent) !important; }
+.bg-dark-blue      { background-color: var(--clr-dark) !important; }
+.bg-purple         { background-color: var(--clr-dark-teal) !important; }
+.bg-purple-light   { background-color: var(--clr-accent-light) !important; }
+
+/* === Shared button classes === */
+.btn-brand {
+  background-color: var(--clr-dark-teal);
+  color: var(--clr-light);
+  border: none;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+  border-radius: 8px;
+}
+.btn-brand:hover { background-color: var(--clr-dark-teal-hover); color: var(--clr-light); transform: translateY(-1px); }
+
+.btn-accent {
+  background-color: var(--clr-accent);
+  color: var(--clr-dark);
+  border: none;
+  font-weight: 700;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+  border-radius: 8px;
+}
+.btn-accent:hover { background-color: var(--clr-accent-hover); color: var(--clr-dark); transform: translateY(-1px); }
+
+/* Backward-compat */
+.btn-purple        { background-color: var(--clr-dark-teal); color: var(--clr-light); border: none; transition: 0.25s; border-radius: 8px; }
+.btn-purple:hover  { background-color: var(--clr-dark-teal-hover); color: var(--clr-light); }
+.btn-dark-blue     { background-color: var(--clr-dark); color: var(--clr-light); border: none; transition: 0.25s; border-radius: 8px; }
+.btn-dark-blue:hover { background-color: var(--clr-dark-teal); color: var(--clr-light); }
+
+/* === Shared input focus === */
+.custom-input {
+  border-color: #d0dde0;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.custom-input:focus {
+  border-color: var(--clr-dark-teal);
+  box-shadow: 0 0 0 0.2rem rgba(46, 110, 126, 0.18);
+  background-color: var(--clr-light);
+}
