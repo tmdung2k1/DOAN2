@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import QuanLyPhong from '../components/QuanLyPhong.vue'
 import QuanLyLoaiPhong from '../components/QuanLyLoaiPhong.vue'
@@ -7,14 +7,22 @@ import QuanLyDatPhong from '../components/QuanLyDatPhong.vue'
 import CaiDatHeThong from '../components/CaiDatHeThong.vue'
 import QuanLyHopDong from '../components/QuanLyHopDong.vue'
 import QuanLyDienNuoc from '../components/QuanLyDienNuoc.vue'
+import QuanLyHoaDon from '../components/QuanLyHoaDon.vue'
 
 const router = useRouter()
-const tabHienTai = ref('phong-tro')
+
+
+const tabHienTai = ref(localStorage.getItem('dashboard_tab') || 'phong-tro')
 const sidebarThuGon = ref(false)
 const moModalCaiDat = ref(false)
 
+watch(tabHienTai, (tab) => {
+  localStorage.setItem('dashboard_tab', tab)
+})
+
 const xuLyDangXuat = () => {
   localStorage.removeItem('admin_token')
+  localStorage.removeItem('dashboard_tab')
   router.push('/dang-nhap')
 }
 
@@ -75,6 +83,14 @@ const toggleSidebar = () => {
           </a>
         </li>
         <li class="nav-item">
+          <a @click.prevent="tabHienTai = 'hoa-don'" 
+            :class="['nav-link text-white fw-bold px-3 py-2  d-flex align-items-center gap-2', tabHienTai === 'hoa-don' ? 'active-menu' : '']" 
+            href="#">
+            <i class="bi bi-file-earmark-text"></i>
+            <span v-if="!sidebarThuGon">Quản lý Hóa Đơn</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a @click.prevent="moModalCaiDat = true" 
              :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2']" 
              href="#">
@@ -97,6 +113,7 @@ const toggleSidebar = () => {
         <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" /> 
         <QuanLyHopDong v-else-if="tabHienTai === 'hop-dong'" />
         <QuanLyDienNuoc v-else-if="tabHienTai === 'dien-nuoc'" />
+        <QuanLyHoaDon v-else-if="tabHienTai === 'hoa-don'" />
       </div>
     </div>
 

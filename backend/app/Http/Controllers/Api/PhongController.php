@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class PhongController extends Controller
 {
-    // 0. Lấy danh sách loại phòng
     public function getLoaiPhong()
     {
         $loaiPhongs = LoaiPhong::all();
@@ -19,16 +18,15 @@ class PhongController extends Controller
         ]);
     }
 
-    // 1. Lấy toàn bộ danh sách phòng
+    // Lấy toàn bộ danh sách phòng
     public function index()
     {
-        $danhSachPhong = Phong::with('loaiPhong')->orderBy('created_at', 'desc')->get();
+        $danhSachPhong = Phong::with('loaiPhong')->orderBy('so_phong', 'asc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $danhSachPhong
         ]);
     }
-    // 2. Thêm một phòng mới
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,7 +59,7 @@ class PhongController extends Controller
             'data' => $phong
         ]);
     }
-    // 3. Cập nhật thông tin phòng
+
     public function update(Request $request, $id)
     {
         $phong = Phong::find($id);
@@ -99,7 +97,6 @@ class PhongController extends Controller
             'data' => $phong
         ]);
     }
-    // 4. Xóa phòng
     public function destroy($id)
     {
         $phong = Phong::find($id);
