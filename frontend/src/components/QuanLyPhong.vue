@@ -236,25 +236,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.text-dark-blue { color: #2E6E7E; }
-.btn-purple { background-color: #2E6E7E; color: #fff; border: none; transition: 0.25s; border-radius: 8px; }
-.btn-purple:hover { background-color: #00C4A0; color: #141414; }
-.badge-loai-phong { background-color: #2E6E7E; color: #fff; font-weight: 500; padding: 0.5em 0.75em; border-radius: 6px; }
-
-/* Badge trạng thái phòng */
-.badge-trong     { background-color: #d1fae5; color: #065f46; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
-.badge-da-thue   { background-color: #dbeafe; color: #1e40af; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
-.badge-dat-truoc { background-color: #fef9c3; color: #854d0e; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
-.badge-bao-tri   { background-color: #fee2e2; color: #991b1b; font-weight: 700; padding: 0.4em 0.8em; border-radius: 20px; font-size: 12px; }
-
-/* Modal CSS */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(20, 20, 20, 0.72); z-index: 9999;
-}
-.modal-content { width: 90%; max-width: 600px; animation: slideDown 0.3s ease-out; }
-.custom-input { border-color: #c2d9de; border-radius: 6px; outline: none; transition: 0.2s; }
-.custom-input:focus { border-color: #2E6E7E; box-shadow: 0 0 0 0.25rem rgba(46, 110, 126, 0.18); }
-@keyframes slideDown { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
+@import "../assets/css/quan-ly-phong.css";
 </style>
 

@@ -92,7 +92,5 @@ onMounted(() => layDanhSachYeuCau())
 </template>
 
 <style scoped>
-.text-dark-blue { color: #2E6E7E; }
-.text-purple { color: #00C4A0; }
-.bg-purple-light { background-color: #e0f8f4; }
+@import "../assets/css/quan-ly-dat-phong.css";
 </style>

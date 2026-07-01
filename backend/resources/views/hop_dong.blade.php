@@ -5,21 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Hợp Đồng Thuê Phòng Trọ</title>
     <style>
-        body {
-            font-family: 'DejaVu Sans', sans-serif;
-            font-size: 14px;
-            line-height: 1.8;
-            margin: 20px 30px;
-        }
-        .text-center { text-align: center; }
-        .text-bold { font-weight: bold; }
-        .text-italic { font-style: italic; }
-        .quoc-hieu { font-size: 16px; margin-bottom: 5px; }
-        .tieu-ngu { font-size: 15px; margin-bottom: 5px; }
-        .line { text-align: center; margin-bottom: 25px; letter-spacing: 2px; }
-        .title { font-size: 22px; font-weight: bold; margin: 20px 0; text-transform: uppercase; }
-        .section-title { font-weight: bold; font-size: 15px; margin-top: 20px; text-transform: uppercase; }
-        .row { margin-bottom: 5px; }
+        {!! file_get_contents(public_path('css/hop_dong.css')) !!}
     </style>
 </head>
 <body>

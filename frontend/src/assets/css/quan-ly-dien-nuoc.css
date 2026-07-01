@@ -1,0 +1,110 @@
+.text-dark-blue {
+  color: #2E6E7E;
+}
+
+.btn-teal {
+  background-color: #2E6E7E;
+  color: #fff;
+  border: none;
+  transition: 0.25s;
+  border-radius: 8px;
+}
+
+.btn-teal:hover {
+  background-color: #00C4A0;
+  color: #141414;
+}
+
+.text-teal {
+  color: #00C4A0;
+}
+
+.bg-teal-light {
+  background-color: #e0f8f4;
+}
+
+.service-badge {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.service-dien {
+  color: #d97706;
+}
+
+.service-nuoc {
+  color: #0891b2;
+}
+
+.service-box {
+  border: 2px solid;
+}
+
+.service-box-dien {
+  border-color: #fde68a;
+  background-color: #fffbeb;
+}
+
+.service-box-nuoc {
+  border-color: #a5f3fc;
+  background-color: #f0f9ff;
+}
+
+.service-box-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.service-icon {
+  font-size: 18px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(20, 20, 20, 0.72);
+  z-index: 9999;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 620px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.custom-input {
+  border-color: #c2d9de;
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.custom-input:focus {
+  border-color: #2E6E7E;
+  box-shadow: 0 0 0 0.25rem rgba(46, 110, 126, 0.18);
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 13.5px;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

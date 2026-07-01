@@ -1,0 +1,56 @@
+.text-dark-blue {
+    color: #2E6E7E;
+}
+
+.btn-purple {
+    background-color: #2E6E7E;
+    color: #fff;
+    border: none;
+    transition: 0.25s;
+    border-radius: 8px;
+}
+
+.btn-purple:hover {
+    background-color: #00C4A0;
+    color: #141414;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(20, 20, 20, 0.72);
+    z-index: 9999;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 500px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.custom-input {
+    border-color: #c2d9de;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.custom-input:focus {
+    border-color: #2E6E7E;
+    box-shadow: 0 0 0 0.25rem rgba(46, 110, 126, 0.18);
+}
+
+@keyframes slideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

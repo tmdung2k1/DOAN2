@@ -1,4 +1,4 @@
-/* Giao diện thẻ phòng trọ */
+
 .room-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
@@ -28,4 +28,4 @@
 .btn-dark-blue:hover {
     background-color: #00C4A0;
     color: #141414;
-}
+}
