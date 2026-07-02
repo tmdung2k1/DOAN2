@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import logoNhaTro from "../assets/images/logo_nha_tro.png";
 
 const router = useRouter();
 const email = ref("");
@@ -57,10 +58,11 @@ const xuLyDangNhap = async () => {
   <div class="login-container d-flex justify-content-center align-items-center">
     <div class="card p-5 shadow-lg border-0 login-box">
       <div class="text-center mb-4">
+        <img :src="logoNhaTro" alt="Logo" class="mb-3" style="width: 72px; height: 72px; object-fit: contain;" />
         <h2 class="fw-bold text-dark-blue text-uppercase tracking-wider">
           Quản Trị Viên
         </h2>
-        <div class="small text-muted">Hệ thống quản lý nhà trọ tập trung</div>
+        <div class="small text-muted">Hệ thống quản lý nhà trọ TMD</div>
       </div>
 
       <div

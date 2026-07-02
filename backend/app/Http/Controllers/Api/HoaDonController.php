@@ -88,6 +88,38 @@ class HoaDonController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Lỗi tạo hóa đơn: ' . $e->getMessage()], 500);
         }
     }
+    public function layChiTiet($id)
+    {
+        // JOIN để lấy đủ ten_khach và so_phong cho modal chi tiết
+        $hoaDon = DB::table('hoa_don')
+            ->join('hop_dong', 'hoa_don.hop_dong_id', '=', 'hop_dong.id')
+            ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
+            ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
+            ->where('hoa_don.id', $id)
+            ->select(
+                'hoa_don.*',
+                'phong.so_phong',
+                'tai_khoans.ho_ten as ten_khach',
+                'tai_khoans.so_dien_thoai'
+            )
+            ->first();
+
+        if (!$hoaDon) {
+            return response()->json(['status' => 'error', 'message' => 'Không tìm thấy hóa đơn!'], 404);
+        }
+
+        // Lấy danh sách các khoản thu thuộc về hóa đơn này
+        $chiTiet = DB::table('chi_tiet_hoa_don')
+            ->where('hoa_don_id', $id)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'hoa_don' => $hoaDon,
+            'chi_tiet' => $chiTiet
+        ]);
+    }
 
     // Xác nhận Khách đã thanh toán
     public function xacNhanThanhToan($id)

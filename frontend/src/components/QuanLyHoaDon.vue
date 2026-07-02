@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { inHoaDon as inHoaDonUtil } from '../utils/inHoaDon.js'
 
 const danhSachHoaDon = ref([])
 const danhSachHopDong = ref([])
@@ -7,6 +8,36 @@ const dangTai = ref(true)
 const dangLuu = ref(false)
 const thongBao = ref({ hien: false, loai: '', noi_dung: '' })
 const token = localStorage.getItem('admin_token')
+
+const hienThiModalChiTiet = ref(false)
+const chiTietHoaDonDangXem = ref([])
+const thongTinHoaDonDangXem = ref(null)
+const dichLoaiPhi = (ma) => {
+  const dict = {
+    'tien_phong': 'Tiền phòng', 'tien_dien': 'Tiền điện', 
+    'tien_nuoc': 'Tiền nước', 'rac': 'Tiền rác', 
+    'wifi': 'Tiền Wifi', 'khac': 'Chi phí khác'
+  }
+  return dict[ma] || ma
+}
+
+const xemChiTiet = async (id) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/hoa-don/${id}/chi-tiet`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      thongTinHoaDonDangXem.value = result.hoa_don
+      chiTietHoaDonDangXem.value = result.chi_tiet
+      hienThiModalChiTiet.value = true
+    }
+  } catch (error) {
+    alert('Không thể tải chi tiết hóa đơn!')
+  }
+}
+
+const inHoaDon = () => inHoaDonUtil(thongTinHoaDonDangXem.value, chiTietHoaDonDangXem.value)
 
 const hienThiModal = ref(false)
 const hopDongDuocChon = ref(null)
@@ -165,7 +196,6 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
     <div class="hd-header">
       <div>
         <h4 class="hd-title">🧾 Quản Lý Hóa Đơn</h4>
-        <p class="hd-sub">Lập và theo dõi thu tiền phòng hàng tháng</p>
       </div>
       <button @click="moModalThem" class="btn-new">
         <span class="btn-icon">＋</span> Lập Hóa Đơn Mới
@@ -213,7 +243,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
             <th>Tổng tiền</th>
             <th>Hạn chót nộp</th>
             <th>Trạng thái</th>
-            <th class="text-right">Thao tác</th>
+            <th class="text-center">Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -239,15 +269,19 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
               <span v-else-if="hd.trang_thai === 'da_thanh_toan'" class="status-badge badge-done">Đã thu</span>
               <span v-else class="status-badge badge-overdue">Quá hạn</span>
             </td>
-            <td class="text-right">
-              <button
-                v-if="hd.trang_thai === 'chua_thanh_toan'"
-                @click="xacNhanThuTien(hd.id)"
-                class="btn-thu"
-              >
-                Đã nhận tiền
-              </button>
-              <span v-else class="text-done-lbl">—</span>
+            <td>
+              <div class="action-btns">
+                <button @click="xemChiTiet(hd.id)" class="btn-xem">
+                  🔍 Xem
+                </button>
+                <button
+                  v-if="hd.trang_thai === 'chua_thanh_toan'"
+                  @click="xacNhanThuTien(hd.id)"
+                  class="btn-thu"
+                >
+                  ✔ Đã nhận tiền
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -266,7 +300,6 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
 
           <form @submit.prevent="luuHoaDon" class="modal-body">
 
-            <div class="step-label">① Thông tin cơ bản</div>
             <div class="form-grid-3">
               <div class="form-group">
                 <label>Phòng / Hợp đồng <span class="required">*</span></label>
@@ -292,8 +325,6 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
               <span>👤 {{ hopDongDuocChon.ho_ten }}</span>
               <span>💵 Giá thuê: <strong>{{ fmt(hopDongDuocChon.gia_thue_hang_thang) }}</strong>/tháng</span>
             </div>
-            <div class="step-label">② Chi tiết các khoản thu</div>
-
             <div class="chi-tiet-table">
               <div class="ct-header">
                 <div class="ct-col-type">Loại khoản thu</div>
@@ -372,6 +403,100 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
             </div>
 
           </form>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="modal">
+      <div v-if="hienThiModalChiTiet" class="modal-bg" @click.self="hienThiModalChiTiet = false">
+        <div class="modal-box modal-chitiet">
+          <div class="modal-hd">
+            <div class="modal-hd-left">
+              <div class="modal-invoice-badge">
+                <span>🧾</span>
+              </div>
+              <div>
+                <h5 class="modal-title">Chi Tiết Hóa Đơn</h5>
+                <p v-if="thongTinHoaDonDangXem" class="modal-sub">
+                  <span class="ma-hd-badge">{{ thongTinHoaDonDangXem.ma_hoa_don }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="modal-hd-actions">
+              <button @click="hienThiModalChiTiet = false" class="btn-close-modal" title="Đóng">✕</button>
+            </div>
+          </div>
+
+          <div v-if="thongTinHoaDonDangXem" class="modal-body">
+
+            <div :class="['ct-status-banner', thongTinHoaDonDangXem.trang_thai === 'da_thanh_toan' ? 'banner-done' : 'banner-pending']">
+              <span class="banner-icon">{{ thongTinHoaDonDangXem.trang_thai === 'da_thanh_toan' ? '✅' : '⏳' }}</span>
+              <div>
+                <div class="banner-title">{{ thongTinHoaDonDangXem.trang_thai === 'da_thanh_toan' ? 'Đã thu tiền' : 'Chưa thu tiền' }}</div>
+                <div v-if="thongTinHoaDonDangXem.ngay_thanh_toan" class="banner-sub">Ngày thu: {{ fmtNgay(thongTinHoaDonDangXem.ngay_thanh_toan) }}</div>
+                <div v-else class="banner-sub">Hạn chót: {{ fmtNgay(thongTinHoaDonDangXem.han_chot) }}</div>
+              </div>
+              <div class="banner-amount">{{ fmt(thongTinHoaDonDangXem.tong_tien) }}</div>
+            </div>
+
+            <div class="ct-info-row">
+              <div class="ct-info-box">
+                <div class="ct-info-box-title">👤 Khách thuê</div>
+                <div class="ct-info-box-val">{{ thongTinHoaDonDangXem.ten_khach }}</div>
+                <div class="ct-info-box-sub">🏠 Phòng {{ thongTinHoaDonDangXem.so_phong }}</div>
+              </div>
+              <div class="ct-info-box">
+                <div class="ct-info-box-title">📅 Kỳ thanh toán</div>
+                <div class="ct-info-box-val">{{ fmtThang(thongTinHoaDonDangXem.thang_thanh_toan) }}</div>
+                <div class="ct-info-box-sub">Hạn nộp: {{ fmtNgay(thongTinHoaDonDangXem.han_chot) }}</div>
+              </div>
+            </div>
+
+            <!-- Bảng chi tiết khoản thu -->
+            <div class="chitiet-section-title">📋 Chi Tiết Các Khoản Thu</div>
+            <table class="chitiet-table">
+              <thead>
+                <tr>
+                  <th style="width:40%">Loại khoản thu</th>
+                  <th class="text-center" style="width:15%">Số lượng</th>
+                  <th class="text-right" style="width:22%">Đơn giá</th>
+                  <th class="text-right" style="width:23%">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="ct in chiTietHoaDonDangXem" :key="ct.id">
+                  <td>
+                    <span class="loai-phi-badge">{{ dichLoaiPhi(ct.loai_phi) }}</span>
+                  </td>
+                  <td class="text-center">{{ ct.so_luong }}</td>
+                  <td class="text-right">{{ fmt(ct.don_gia) }}</td>
+                  <td class="text-right fw-bold">{{ fmt(ct.thanh_tien) }}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr class="chitiet-tong-row">
+                  <td colspan="3" class="text-right">TỔNG CỘNG</td>
+                  <td class="text-right total-val">{{ fmt(thongTinHoaDonDangXem.tong_tien) }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+            <button @click="hienThiModalChiTiet = false" class="btn-cancel">Huỷ</button>
+            <div class="modal-footer-right">
+              <button @click="inHoaDon" class="btn-print-footer">
+                🖨️ In hóa đơn
+              </button>
+              <button
+                v-if="thongTinHoaDonDangXem && thongTinHoaDonDangXem.trang_thai === 'chua_thanh_toan'"
+                @click="xacNhanThuTien(thongTinHoaDonDangXem.id); hienThiModalChiTiet = false"
+                class="btn-submit"
+              >
+                ✅ Xác nhận đã thu tiền
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </transition>

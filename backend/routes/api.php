@@ -61,5 +61,6 @@ Route::middleware('auth:sanctum')
         Route::get('/admin/hoa-don/du-lieu-form', [HoaDonController::class, 'layDuLieuForm']);
         Route::get('/admin/hoa-don', [HoaDonController::class, 'index']);
         Route::post('/admin/hoa-don', [HoaDonController::class, 'store']);
+        Route::get('/admin/hoa-don/{id}/chi-tiet', [HoaDonController::class, 'layChiTiet']);
         Route::put('/admin/hoa-don/{id}/thanh-toan', [HoaDonController::class, 'xacNhanThanhToan']);
     });

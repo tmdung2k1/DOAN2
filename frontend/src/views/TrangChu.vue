@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import RoomCard from "../components/RoomCard.vue";
+import logoNhaTro from "../assets/images/logo_nha_tro.png";
 
 const danhSachPhong = ref([]);
 const dangTai = ref(true);
@@ -44,7 +45,10 @@ onMounted(() => layDanhSachPhong());
 <template>
   <nav class="navbar navbar-dark bg-dark-blue py-3 shadow-sm">
     <div class="container">
-      <span class="navbar-brand fw-bold text-uppercase">Hệ Thống Nhà Trọ Cao Cấp</span>
+      <span class="navbar-brand fw-bold text-uppercase d-flex align-items-center gap-2">
+        <img :src="logoNhaTro" alt="Logo TMD" style="height: 32px; width: 32px; object-fit: contain; filter: brightness(0) invert(1);" />
+        Hệ thống cho thuê nhà trọ TMD
+      </span>
       <span class="badge bg-purple px-3 py-2">Trang Khách Thuê</span>
     </div>
   </nav>

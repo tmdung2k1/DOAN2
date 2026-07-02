@@ -134,6 +134,10 @@
   padding-right: 28px;
 }
 
+.hd-table thead th.text-center {
+  text-align: center;
+}
+
 .hd-row td {
   padding: 14px 16px;
   border-bottom: 1px solid #f1f5f9;
@@ -227,6 +231,13 @@
 .btn-thu:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(16, 185, 129, .35);
+}
+
+.action-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .text-done-lbl {
@@ -352,7 +363,7 @@
 }
 
 .modal-body {
-  padding: 24px 28px;
+  padding: 24px 28px 8px;
 }
 
 .step-label {
@@ -556,10 +567,18 @@
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
-  padding-top: 20px;
+  padding: 20px 28px 24px;
   border-top: 1px solid #f1f5f9;
+  margin-top: auto;
+}
+
+.modal-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .btn-cancel {
@@ -662,4 +681,304 @@
 
 .modal-leave-to .modal-box {
   transform: translateY(-20px) scale(.97);
+}
+
+.btn-xem {
+  background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-xem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, .4);
+}
+
+.me-2 {
+  margin-right: 8px;
+}
+
+.pe-4 {
+  padding-right: 28px !important;
+}
+
+.modal-chitiet {
+  max-width: 660px;
+}
+
+.modal-hd-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal-invoice-badge {
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, #eff0ff, #ddd6fe);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.modal-hd-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ma-hd-badge {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6366f1;
+  background: #eff0ff;
+  padding: 2px 10px;
+  border-radius: 6px;
+  letter-spacing: .5px;
+}
+
+.btn-print {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+
+.btn-print:hover {
+  background: #e8f4fd;
+  border-color: #0ea5e9;
+  color: #0ea5e9;
+}
+
+/* Banner trạng thái */
+.ct-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  border: 1.5px solid transparent;
+}
+
+.banner-done {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border-color: #6ee7b7;
+}
+
+.banner-pending {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border-color: #fcd34d;
+}
+
+.banner-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.banner-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.banner-done .banner-title {
+  color: #065f46;
+}
+
+.banner-pending .banner-title {
+  color: #92400e;
+}
+
+.banner-sub {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.banner-done .banner-sub {
+  color: #059669;
+}
+
+.banner-pending .banner-sub {
+  color: #d97706;
+}
+
+.banner-amount {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 900;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.ct-info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ct-info-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.ct-info-box-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 6px;
+}
+
+.ct-info-box-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.ct-info-box-sub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.chitiet-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6366f1;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 10px;
+}
+
+.chitiet-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.chitiet-table thead th {
+  background: #f8fafc;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: .5px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: left;
+}
+
+.chitiet-table thead th.text-right {
+  text-align: right;
+}
+
+.chitiet-table thead th.text-center {
+  text-align: center;
+}
+
+.chitiet-table tbody tr td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.chitiet-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.chitiet-table tbody tr:hover {
+  background: #fafbff;
+}
+
+.chitiet-table td.text-right {
+  text-align: right;
+}
+
+.chitiet-table td.text-center {
+  text-align: center;
+}
+
+.chitiet-table td.fw-bold {
+  font-weight: 800;
+  color: #dc2626;
+}
+
+.chitiet-tong-row td {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff !important;
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.chitiet-tong-row .total-val {
+  font-size: 18px;
+  font-weight: 900;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+.chitiet-tong-row td.text-right {
+  text-align: right;
+}
+
+.loai-phi-badge {
+  display: inline-block;
+  background: #eff0ff;
+  color: #4f46e5;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.btn-print-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  color: #475569;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-print-footer:hover {
+  background: #f0f9ff;
+  border-color: #0ea5e9;
+  color: #0284c7;
 }

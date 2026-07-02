@@ -1,7 +1,18 @@
 <script setup>
-    defineProps({
+    import phong1 from '../assets/images/phong_1.png'
+    import phong2 from '../assets/images/phong_2.png'
+    import phong3 from '../assets/images/phong_3.png'
+    import phong4 from '../assets/images/phong_4.png'
+    import phong5 from '../assets/images/phong_5.png'
+
+    const props = defineProps({
         phong: Object
     })
+
+    const anhPhongMap = [phong1, phong2, phong3, phong4, phong5]
+    const layAnhPhong = (id) => {
+        return anhPhongMap[(id || 0) % anhPhongMap.length]
+    }
 
     const dinhDangTien = (soTien) => {
         return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(soTien)
@@ -10,7 +21,7 @@
 
 <template>
    <div class="card h-100 shadow-sm room-card">
-    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600" class="card-img-top room-img" alt="Ảnh phòng trọ">
+    <img :src="layAnhPhong(phong.id)" class="card-img-top room-img" alt="Ảnh phòng trọ" style="height: 220px; object-fit: cover;">
     
     <div class="card-body p-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -20,7 +31,6 @@
       
       <h5 class="card-title fw-bold text-dark-blue mb-3">Phòng số: {{ phong.so_phong }}</h5>
       
-      <!-- Thông số kích thước -->
       <div class="p-3 bg-light rounded mb-3 border-start border-4 border-primary">
         <div class="small text-muted mb-1">Thông số diện tích:</div>
         <div class="fw-bold text-dark-blue fs-5">{{ phong.dien_tich }} m²</div>
@@ -43,6 +53,5 @@
 </template>
 
 <style scoped>
-    /*Gọi file CSS riêng biệt từ thư mục assets*/
     @import '../assets/css/room.css';
 </style>
