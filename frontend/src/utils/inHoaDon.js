@@ -1,13 +1,3 @@
-/**
- * Tiện ích in hóa đơn cho hệ thống quản lý phòng trọ.
- * Mở cửa sổ in mới với layout hóa đơn chuyên nghiệp.
- *
- * @param {Object} hoaDon   - Thông tin hóa đơn (từ API hoa_don)
- * @param {Array}  chiTiet  - Danh sách chi tiết khoản thu (từ API chi_tiet)
- */
-
-// ── Hằng số ──────────────────────────────────────────────────────────────────
-
 const DICT_LOAI_PHI = {
   tien_phong: 'Tiền phòng',
   tien_dien:  'Tiền điện',
@@ -17,46 +7,17 @@ const DICT_LOAI_PHI = {
   khac:       'Chi phí khác',
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-/**
- * Chuyển mã loại phí sang tên hiển thị tiếng Việt.
- * @param {string} ma
- * @returns {string}
- */
 const dichLoaiPhi = (ma) => DICT_LOAI_PHI[ma] || ma
 
-/**
- * Format số thành tiền VNĐ (ví dụ: 800,000 đ).
- * @param {number|string} n
- * @returns {string}
- */
 const fmtTien = (n) => Number(n).toLocaleString('vi-VN') + ' đ'
 
-/**
- * Format ngày sang định dạng dd/mm/yyyy theo locale Việt Nam.
- * @param {string} d
- * @returns {string}
- */
 const fmtNgay = (d) => new Date(d).toLocaleDateString('vi-VN')
 
-/**
- * Format tháng/năm từ chuỗi ngày.
- * @param {string} d
- * @returns {string}
- */
 const fmtThang = (d) => {
   const x = new Date(d)
   return `Tháng ${x.getMonth() + 1}/${x.getFullYear()}`
 }
 
-// ── Tạo HTML ──────────────────────────────────────────────────────────────────
-
-/**
- * Tạo các dòng tbody cho bảng khoản thu.
- * @param {Array} chiTiet
- * @returns {string}
- */
 const taoRowsKhoanThu = (chiTiet) =>
   chiTiet.map((c) => `
     <tr>
@@ -67,12 +28,6 @@ const taoRowsKhoanThu = (chiTiet) =>
     </tr>`
   ).join('')
 
-/**
- * Trả về toàn bộ chuỗi HTML của trang in hóa đơn.
- * @param {Object} hd
- * @param {Array}  ct
- * @returns {string}
- */
 const taoHTMLHoaDon = (hd, ct) => {
   const rows      = taoRowsKhoanThu(ct)
   const trangThai = hd.trang_thai === 'da_thanh_toan' ? 'Đã thu tiền' : 'Chưa thu tiền'
@@ -90,10 +45,8 @@ const taoHTMLHoaDon = (hd, ct) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hóa Đơn ${hd.ma_hoa_don}</title>
   <style>
-    /* ── Reset ── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ── Layout ── */
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       padding: 40px 48px;
@@ -103,7 +56,6 @@ const taoHTMLHoaDon = (hd, ct) => {
       line-height: 1.5;
     }
 
-    /* ── Header ── */
     .invoice-header {
       display: flex;
       justify-content: space-between;
@@ -150,7 +102,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     .trang-thai.da-thu { background: #d1fae5; color: #065f46; }
     .trang-thai.chua-thu { background: #fef3c7; color: #92400e; }
 
-    /* ── Info grid ── */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -182,7 +133,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     .info-row span:first-child { color: #64748b; }
     .info-row span:last-child { font-weight: 600; color: #1e293b; }
 
-    /* ── Bảng khoản thu ── */
     .section-title {
       font-size: 11px;
       font-weight: 700;
@@ -225,7 +175,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     }
     .total-row td:first-child { text-align: right; }
 
-    /* ── Footer / chữ ký ── */
     .page-footer {
       margin-top: 44px;
       border-top: 1px solid #e2e8f0;
@@ -258,7 +207,6 @@ const taoHTMLHoaDon = (hd, ct) => {
       padding-top: 6px;
     }
 
-    /* ── Print media ── */
     @media print {
       body { padding: 24px 32px; }
       .invoice-header { margin-bottom: 24px; }
@@ -267,7 +215,6 @@ const taoHTMLHoaDon = (hd, ct) => {
 </head>
 <body>
 
-  <!-- Header hóa đơn -->
   <div class="invoice-header">
     <div>
       <div class="company-name">🏠 Hệ thống cho thuê nhà trọ TMD</div>
@@ -280,7 +227,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     </div>
   </div>
 
-  <!-- Thông tin khách thuê & hóa đơn -->
   <div class="info-grid">
     <div class="info-box">
       <h4>Thông tin khách thuê</h4>
@@ -296,7 +242,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     </div>
   </div>
 
-  <!-- Bảng chi tiết khoản thu -->
   <div class="section-title">📋 Chi tiết các khoản thu</div>
   <table>
     <thead>
@@ -316,7 +261,6 @@ const taoHTMLHoaDon = (hd, ct) => {
     </tfoot>
   </table>
 
-  <!-- Footer chữ ký -->
   <div class="page-footer">
     <div class="print-date">
       Ngày in: ${ngayIn}
@@ -337,14 +281,6 @@ const taoHTMLHoaDon = (hd, ct) => {
 </html>`
 }
 
-// ── Hàm xuất chính ────────────────────────────────────────────────────────────
-
-/**
- * Mở cửa sổ mới với hóa đơn được định dạng và kích hoạt hộp thoại in.
- *
- * @param {Object} hoaDon  - Đối tượng hóa đơn
- * @param {Array}  chiTiet - Mảng chi tiết khoản thu
- */
 export const inHoaDon = (hoaDon, chiTiet) => {
   if (!hoaDon) return
 

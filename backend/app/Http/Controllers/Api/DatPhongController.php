@@ -10,10 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class DatPhongController extends Controller
 {
-    // Lấy danh sách yêu cầu đặt phòng 
     public function index()
     {
-        // Sử dụng Join để lấy luôn số phòng từ bảng phong sang hiển thị
         $danhSach = DB::table('dat_phong')
             ->join('phong', 'dat_phong.phong_id', '=', 'phong.id')
             ->join('tai_khoans', 'dat_phong.khach_id', '=', 'tai_khoans.id')
@@ -33,7 +31,6 @@ class DatPhongController extends Controller
         ]);
     }
 
-    // Xử lý Duyệt đặt phòng
     public function duyet($id)
     {
         $yeuCau = DatPhong::find($id);
@@ -50,17 +47,15 @@ class DatPhongController extends Controller
         ]);
     }
 
-    // Xử lý Từ chối đặt phòng
     public function tuChoi($id)
     {
-       $yeuCau = DatPhong::find($id);
+        $yeuCau = DatPhong::find($id);
         if (!$yeuCau) {
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy yêu cầu!'], 404);
         }
 
         $yeuCau->update(['trang_thai' => 'huy']);
 
-        // (Tùy chọn) Trả lại trạng thái phòng thành 'trong' nếu cần thiết
         Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'trong']);
 
         return response()->json([

@@ -350,7 +350,6 @@
   color: #fff;
 }
 
-/* Card list animation */
 .card-list-enter-active {
   transition: all .4s ease;
 }

@@ -10,16 +10,19 @@ use Illuminate\Support\Facades\DB;
 
 class HoaDonController extends Controller
 {
-    // Lấy danh sách Hóa Đơn kèm thông tin phòng và khách
     public function index()
     {
+        HoaDon::where('trang_thai', 'chua_thanh_toan')
+            ->where('han_chot', '<', now()->toDateString())
+            ->update(['trang_thai' => 'qua_han']);
+
         $danhSach = DB::table('hoa_don')
             ->join('hop_dong', 'hoa_don.hop_dong_id', '=', 'hop_dong.id')
             ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
             ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
             ->select(
-                'hoa_don.*', 
-                'phong.so_phong', 
+                'hoa_don.*',
+                'phong.so_phong',
                 'tai_khoans.ho_ten as ten_khach',
                 'tai_khoans.so_dien_thoai'
             )
@@ -32,7 +35,6 @@ class HoaDonController extends Controller
         ]);
     }
 
-    // Lấy dữ liệu Hợp đồng đang hiệu lực để đưa vào Form
     public function layDuLieuForm()
     {
         $hopDongs = DB::table('hop_dong')
@@ -51,7 +53,7 @@ class HoaDonController extends Controller
             'hop_dong_id' => 'required|integer',
             'thang_thanh_toan' => 'required|date',
             'han_chot' => 'required|date',
-            'chi_tiet' => 'required|array' // Nhận mảng chi tiết từ giao diện
+            'chi_tiet' => 'required|array'
         ]);
 
         $tongTien = 0;
@@ -61,7 +63,6 @@ class HoaDonController extends Controller
 
         DB::beginTransaction();
         try {
-            // Tạo Hóa đơn tổng
             $hoaDon = HoaDon::create([
                 'ma_hoa_don' => 'INV-' . time(),
                 'hop_dong_id' => $request->hop_dong_id,
@@ -88,9 +89,9 @@ class HoaDonController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Lỗi tạo hóa đơn: ' . $e->getMessage()], 500);
         }
     }
+
     public function layChiTiet($id)
     {
-        // JOIN để lấy đủ ten_khach và so_phong cho modal chi tiết
         $hoaDon = DB::table('hoa_don')
             ->join('hop_dong', 'hoa_don.hop_dong_id', '=', 'hop_dong.id')
             ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
@@ -108,7 +109,6 @@ class HoaDonController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy hóa đơn!'], 404);
         }
 
-        // Lấy danh sách các khoản thu thuộc về hóa đơn này
         $chiTiet = DB::table('chi_tiet_hoa_don')
             ->where('hoa_don_id', $id)
             ->orderBy('id', 'asc')
@@ -121,12 +121,14 @@ class HoaDonController extends Controller
         ]);
     }
 
-    // Xác nhận Khách đã thanh toán
     public function xacNhanThanhToan($id)
     {
         $hoaDon = HoaDon::find($id);
         if ($hoaDon) {
-            $hoaDon->update(['trang_thai' => 'da_thanh_toan']);
+            $hoaDon->update([
+                'trang_thai'      => 'da_thanh_toan',
+                'ngay_thanh_toan' => now()->toDateString(),
+            ]);
             return response()->json(['status' => 'success', 'message' => 'Đã xác nhận thu tiền!']);
         }
         return response()->json(['status' => 'error', 'message' => 'Không tìm thấy hóa đơn!'], 404);

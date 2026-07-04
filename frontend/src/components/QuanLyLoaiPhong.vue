@@ -74,6 +74,7 @@ onMounted(() => layDanhSach())
     
     <div class="card-body p-0">
       <div v-if="dangTai" class="p-5 text-center text-purple fw-bold">Đang tải dữ liệu...</div>
+      <div v-else-if="danhSachLoai.length === 0" class="p-5 text-center text-muted">Chưa có loại phòng nào trong hệ thống.</div>
       <table v-else class="table table-hover align-middle m-0">
         <thead class="table-light text-uppercase small text-muted">
           <tr>

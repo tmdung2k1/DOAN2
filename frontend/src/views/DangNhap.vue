@@ -30,9 +30,7 @@ const xuLyDangNhap = async () => {
         loi: false,
         noiDung: "Đăng nhập thành công! Đang chuyển hướng...",
       };
-      // Lưu chìa khóa Token vào bộ nhớ trình duyệt
       localStorage.setItem("admin_token", result.token);
-      // Chuyển hướng sau 1.5 giây để người dùng thấy thông báo
       setTimeout(() => {
         router.push("/admin");
       }, 1500);

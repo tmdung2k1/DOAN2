@@ -64,7 +64,6 @@ onMounted(() => layDanhSachPhong());
   </header>
 
   <main class="container my-5">
-    <!-- Bộ Lọc -->
     <div class="card p-4 mb-5 shadow-sm border-0 filter-box">
       <div class="border-bottom pb-2 mb-3">
         <h5 class="fw-bold text-dark-blue m-0">Bộ Lọc Tìm Kiếm Phòng Trọ</h5>
@@ -125,7 +124,6 @@ onMounted(() => layDanhSachPhong());
       </div>
     </div>
 
-    <!-- Kết quả -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h3 class="fw-bold text-dark-blue m-0">
         Kết quả tìm kiếm ({{ danhSachPhongDaLoc.length }})
@@ -148,7 +146,6 @@ onMounted(() => layDanhSachPhong());
         :key="phong.id"
         class="col-12 col-md-6 col-lg-4"
       >
-        <!-- Tái sử dụng Component -->
         <RoomCard :phong="phong" />
       </div>
     </div>
@@ -156,6 +153,5 @@ onMounted(() => layDanhSachPhong());
 </template>
 
 <style scoped>
-/* Gọi file CSS riêng biệt từ thư mục assets */
 @import "../assets/css/app.css";
 </style>

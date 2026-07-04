@@ -11,10 +11,8 @@ const loiForm = ref('')
 const formChiSo = ref({
   phong_id: null,
   thang_ghi_nhan: '',
-  // Điện
   dien_chi_so_cu: '',
   dien_chi_so_moi: '',
-  // Nước
   nuoc_chi_so_cu: '',
   nuoc_chi_so_moi: ''
 })
@@ -59,7 +57,6 @@ const moModalThem = () => {
   hienThiModal.value = true
 }
 
-// Gọi API lưu 1 bản ghi (điện hoặc nước)
 const luuMotChiSo = async (loai, chiSoCu, chiSoMoi) => {
   const res = await fetch('http://127.0.0.1:8000/api/admin/dien-nuoc', {
     method: 'POST',
@@ -92,7 +89,6 @@ const luuChiSo = async () => {
   const nuocCu  = formChiSo.value.nuoc_chi_so_cu  !== '' ? parseFloat(formChiSo.value.nuoc_chi_so_cu)  : null
   const nuocMoi = formChiSo.value.nuoc_chi_so_moi !== '' ? parseFloat(formChiSo.value.nuoc_chi_so_moi) : null
 
-  // Phải nhập ít nhất 1 loại
   const coDien  = dienCu !== null && dienMoi !== null
   const coNuoc  = nuocCu !== null && nuocMoi !== null
   if (!coDien && !coNuoc) {
@@ -100,7 +96,6 @@ const luuChiSo = async () => {
     return
   }
 
-  // Validate
   if (coDien) {
     if (isNaN(dienCu) || isNaN(dienMoi)) { loiForm.value = 'Chỉ số điện không hợp lệ.'; return }
     if (dienMoi < dienCu) { loiForm.value = 'Chỉ số điện mới không được nhỏ hơn chỉ số cũ!'; return }

@@ -6,6 +6,5 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     open: true,
-    historyApiFallback: true,
   }
 })

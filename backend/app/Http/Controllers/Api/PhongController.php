@@ -4,21 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Phong;
-use App\Models\LoaiPhong;
 use Illuminate\Http\Request;
 
 class PhongController extends Controller
 {
-    public function getLoaiPhong()
-    {
-        $loaiPhongs = LoaiPhong::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $loaiPhongs
-        ]);
-    }
-
-    // Lấy toàn bộ danh sách phòng
     public function index()
     {
         $danhSachPhong = Phong::with('loaiPhong')->orderBy('so_phong', 'asc')->get();
@@ -27,9 +16,10 @@ class PhongController extends Controller
             'data' => $danhSachPhong
         ]);
     }
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'so_phong' => 'required|unique:phong,so_phong',
             'gia_thue' => 'required|numeric|min:0',
             'gia_coc' => 'required|numeric|min:0',
@@ -67,7 +57,7 @@ class PhongController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy phòng!'], 404);
         }
 
-        $validated = $request->validate([
+        $request->validate([
             'so_phong' => 'required|unique:phong,so_phong,' . $id,
             'gia_thue' => 'required|numeric|min:0',
             'gia_coc' => 'required|numeric|min:0',
@@ -97,6 +87,7 @@ class PhongController extends Controller
             'data' => $phong
         ]);
     }
+
     public function destroy($id)
     {
         $phong = Phong::find($id);

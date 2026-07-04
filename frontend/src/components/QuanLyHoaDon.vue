@@ -171,7 +171,6 @@ const xacNhanThuTien = async (id) => {
   } catch (e) { hienThongBao('error', 'Lỗi kết nối!') }
 }
 
-// Thống kê nhanh
 const tongChuaThu = computed(() => danhSachHoaDon.value.filter(h => h.trang_thai === 'chua_thanh_toan').length)
 const tongDaThu   = computed(() => danhSachHoaDon.value.filter(h => h.trang_thai === 'da_thanh_toan').length)
 const doanhThuThang = computed(() => danhSachHoaDon.value.filter(h => h.trang_thai === 'da_thanh_toan').reduce((s, h) => s + Number(h.tong_tien), 0))
@@ -226,7 +225,6 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
       </div>
     </div>
 
-    <!-- Bảng danh sách -->
     <div class="hd-table-wrap">
       <div v-if="dangTai" class="hd-loading">
         <div class="spinner"></div> Đang tải dữ liệu...
@@ -452,7 +450,6 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
               </div>
             </div>
 
-            <!-- Bảng chi tiết khoản thu -->
             <div class="chitiet-section-title">📋 Chi Tiết Các Khoản Thu</div>
             <table class="chitiet-table">
               <thead>

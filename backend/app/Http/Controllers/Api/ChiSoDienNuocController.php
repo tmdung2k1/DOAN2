@@ -46,7 +46,6 @@ class ChiSoDienNuocController extends Controller
             'chi_so_moi.gte'          => 'Chỉ số mới phải lớn hơn hoặc bằng chỉ số cũ.',
         ]);
 
-        // Kiểm tra cài đặt đơn giá
         $caiDat = CaiDat::first();
         if (!$caiDat) {
             return response()->json([

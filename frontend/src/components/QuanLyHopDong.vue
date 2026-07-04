@@ -157,7 +157,6 @@ const taiFilePDF = async (id, ma) => {
   } catch (e) { hienThongBao('error', 'Lỗi kết nối máy chủ!') }
 }
 
-// Thống kê
 const tongHieuLuc = computed(() => danhSachHopDong.value.filter(h => h.trang_thai === 'hieu_luc').length)
 
 const tongHetHan  = computed(() => danhSachHopDong.value.filter(h => h.trang_thai === 'het_han').length)
@@ -171,14 +170,12 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
 <template>
   <div class="hd-wrap">
 
-    <!-- Toast -->
     <transition name="toast">
       <div v-if="thongBao.hien" :class="['toast-noti', thongBao.loai === 'success' ? 'toast-ok' : 'toast-err']">
         {{ thongBao.loai === 'success' ? '✅' : '❌' }} {{ thongBao.noi_dung }}
       </div>
     </transition>
 
-    <!-- Header -->
     <div class="hd-header">
       <div>
         <h4 class="hd-title">📋 Quản Lý Hợp Đồng</h4>
@@ -188,7 +185,6 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       </button>
     </div>
 
-    <!-- Stat row -->
     <div class="stat-row">
       <div class="stat-card st-green">
         <div class="st-icon">✅</div>
@@ -205,7 +201,6 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       </div>
     </div>
 
-    <!-- Danh sách -->
     <div class="hd-body">
       <div v-if="dangTai" class="hd-loading">
         <div class="spin"></div> Đang tải dữ liệu...
@@ -227,7 +222,6 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
               'card-canceled': hd.trang_thai === 'da_huy'
             }"
           >
-            <!-- Card top bar -->
             <div class="card-topbar">
               <span class="card-ma">{{ hd.ma_hop_dong }}</span>
               <span
@@ -242,14 +236,12 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
               </span>
             </div>
 
-            <!-- Thông tin chính -->
             <div class="card-main">
               <div class="card-room">🏠 Phòng {{ hd.so_phong }}</div>
               <div class="card-tenant">{{ hd.ten_khach_hang }}</div>
               <div class="card-phone">{{ hd.so_dien_thoai }}</div>
             </div>
 
-            <!-- Thông tin phụ -->
             <div class="card-info">
               <div class="info-item">
                 <span class="info-label">Bắt đầu</span>
@@ -269,7 +261,6 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
               </div>
             </div>
 
-            <!-- Actions -->
             <div class="card-actions">
               <button @click="taiFilePDF(hd.id, hd.ma_hop_dong)" class="btn-pdf">
                 📄 Xuất PDF
@@ -287,7 +278,6 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       </div>
     </div>
 
-    <!-- ===== MODAL ===== -->
     <transition name="modal-fade">
       <div v-if="hienThiModal" class="modal-bg" @click.self="hienThiModal = false">
         <div class="modal-box">

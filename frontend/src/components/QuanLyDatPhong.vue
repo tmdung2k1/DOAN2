@@ -22,7 +22,7 @@ const layDanhSachYeuCau = async () => {
   }
 }
 
-const xuLyHànhDong = async (id, hanhDong) => {
+const xuLyHanhDong = async (id, hanhDong) => {
   if (!confirm(`Bạn có chắc chắn muốn thực hiện thao tác này?`)) return
   
   try {
@@ -33,7 +33,7 @@ const xuLyHànhDong = async (id, hanhDong) => {
     const result = await res.json()
     if (result.status === 'success') {
       alert(result.message)
-      layDanhSachYeuCau() // Tải lại bảng dữ liệu
+      layDanhSachYeuCau()
     }
   } catch (error) {
     alert('Lỗi kết nối máy chủ!')
@@ -79,8 +79,8 @@ onMounted(() => layDanhSachYeuCau())
             </td>
             <td class="text-end pe-4">
               <div v-if="yc.trang_thai === 'cho_xac_nhan'">
-                <button @click="xuLyHànhDong(yc.id, 'duyet')" class="btn btn-sm btn-success fw-bold me-2 px-3">Duyệt</button>
-                <button @click="xuLyHànhDong(yc.id, 'tu-choi')" class="btn btn-sm btn-outline-danger fw-bold px-2">Từ chối</button>
+                <button @click="xuLyHanhDong(yc.id, 'duyet')" class="btn btn-sm btn-success fw-bold me-2 px-3">Duyệt</button>
+                <button @click="xuLyHanhDong(yc.id, 'tu-choi')" class="btn btn-sm btn-outline-danger fw-bold px-2">Từ chối</button>
               </div>
               <div v-else class="text-muted small italic">Đã xử lý</div>
             </td>

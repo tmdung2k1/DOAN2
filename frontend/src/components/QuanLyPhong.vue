@@ -10,7 +10,6 @@ const hienThiModal = ref(false)
 const laCheDoSua = ref(false)
 const formPhong = ref({ id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', tang_id: null })
 
-// Lấy danh sách loại phòng
 const layDanhSachLoaiPhong = async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/admin/loai-phong', {
@@ -28,7 +27,6 @@ const layDanhSachLoaiPhong = async () => {
   }
 }
 
-// Lấy danh sách phòng
 const layDanhSachPhong = async () => {
   try {
     dangTai.value = true
@@ -61,7 +59,6 @@ const moModalSua = (phong) => {
   hienThiModal.value = true
 }
 
-// Lưu dữ liệu 
 const luuPhong = async () => {
   const url = laCheDoSua.value 
     ? `http://127.0.0.1:8000/api/admin/phong/${formPhong.value.id}` 
@@ -83,7 +80,7 @@ const luuPhong = async () => {
     const result = await response.json()
     if (result.status === 'success') {
       hienThiModal.value = false
-      layDanhSachPhong() // Tải lại bảng
+      layDanhSachPhong()
       alert(result.message)
     } else {
       alert('Lỗi: ' + (result.message || 'Kiểm tra lại dữ liệu nhập!'))
@@ -93,7 +90,6 @@ const luuPhong = async () => {
   }
 }
 
-// Xóa phòng
 const xoaPhong = async (id, soPhong) => {
   if (!confirm(`Bạn có chắc chắn muốn xóa phòng ${soPhong}?`)) return
 
@@ -238,4 +234,3 @@ onMounted(() => {
 <style scoped>
 @import "../assets/css/quan-ly-phong.css";
 </style>
-

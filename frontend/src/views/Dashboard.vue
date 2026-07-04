@@ -11,7 +11,6 @@ import QuanLyHoaDon from '../components/QuanLyHoaDon.vue'
 
 const router = useRouter()
 
-
 const tabHienTai = ref(localStorage.getItem('dashboard_tab') || 'phong-tro')
 const sidebarThuGon = ref(false)
 const moModalCaiDat = ref(false)
@@ -75,7 +74,7 @@ const toggleSidebar = () => {
           </a>
         </li>
         <li class="nav-item">
-          <a @click.prevent="tabHienTai = 'dien-nuoc'" 
+          <a @click.prevent="tabHienTai = 'dien-nuoc'"
             :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2', tabHienTai === 'dien-nuoc' ? 'active-menu' : '']" 
             href="#">
             <i class="bi bi-lightning-charge"></i>

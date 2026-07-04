@@ -14,7 +14,6 @@ const formCaiDat = ref({
 const dangTai = ref(true)
 const token = localStorage.getItem('admin_token')
 
-// Lấy dữ liệu khi mở trang
 const layDuLieuCaiDat = async () => {
   dangTai.value = true
   try {
@@ -31,7 +30,6 @@ const layDuLieuCaiDat = async () => {
   dangTai.value = false
 }
 
-// Lưu dữ liệu
 const luuCaiDat = async () => {
   try {
     const res = await fetch('http://127.0.0.1:8000/api/admin/cai-dat', {
@@ -63,10 +61,8 @@ onMounted(() => layDuLieuCaiDat())
 </script>
 
 <template>
-  <!-- Modal Backdrop -->
   <div v-if="isOpen" class="modal-backdrop fade show" @click="closeModal"></div>
   
-  <!-- Modal -->
   <div v-if="isOpen" class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg">
@@ -117,4 +113,4 @@ onMounted(() => layDuLieuCaiDat())
 
 <style scoped>
 @import "../assets/css/cai-dat-he-thong.css";
-</style>
+</style>
