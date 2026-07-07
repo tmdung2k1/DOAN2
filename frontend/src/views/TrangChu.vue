@@ -46,7 +46,7 @@ onMounted(() => layDanhSachPhong());
   <nav class="navbar navbar-dark bg-dark-blue py-3 shadow-sm">
     <div class="container">
       <span class="navbar-brand fw-bold text-uppercase d-flex align-items-center gap-2">
-        <img :src="logoNhaTro" alt="Logo TMD" style="height: 32px; width: 32px; object-fit: contain; filter: brightness(0) invert(1);" />
+        <img :src="logoNhaTro" alt="Logo TMD" style="height: 38px; width: 38px; object-fit: contain; border-radius: 50%; background: white; padding: 2px;" />
         Hệ thống cho thuê nhà trọ TMD
       </span>
       <span class="badge bg-purple px-3 py-2">Trang Khách Thuê</span>

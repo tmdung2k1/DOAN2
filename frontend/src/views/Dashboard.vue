@@ -8,6 +8,7 @@ import CaiDatHeThong from '../components/CaiDatHeThong.vue'
 import QuanLyHopDong from '../components/QuanLyHopDong.vue'
 import QuanLyDienNuoc from '../components/QuanLyDienNuoc.vue'
 import QuanLyHoaDon from '../components/QuanLyHoaDon.vue'
+import QuanLyTienIch from '../components/QuanLiTienIch.vue'
 
 const router = useRouter()
 
@@ -55,6 +56,14 @@ const toggleSidebar = () => {
              href="#">
             <i class="bi bi-collection"></i>
             <span v-if="!sidebarThuGon">Quản lý Loại Phòng</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a @click.prevent="tabHienTai = 'tien-ich'" 
+             :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2', tabHienTai === 'tien-ich' ? 'active-menu' : '']" 
+             href="#">
+            <i class="bi bi-collection"></i>
+            <span v-if="!sidebarThuGon">Quản lý Tiện Ích</span>
           </a>
         </li>
         <li class="nav-item">
@@ -111,6 +120,7 @@ const toggleSidebar = () => {
         <QuanLyLoaiPhong v-else-if="tabHienTai === 'loai-phong'" />
         <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" /> 
         <QuanLyHopDong v-else-if="tabHienTai === 'hop-dong'" />
+        <QuanLyTienIch v-else-if="tabHienTai === 'tien-ich'" />
         <QuanLyDienNuoc v-else-if="tabHienTai === 'dien-nuoc'" />
         <QuanLyHoaDon v-else-if="tabHienTai === 'hoa-don'" />
       </div>
