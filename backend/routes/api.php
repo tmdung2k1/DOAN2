@@ -28,6 +28,10 @@ Route::middleware('auth:sanctum')
         Route::post('/admin/phong', [PhongController::class, 'store']);
         Route::put('/admin/phong/{id}', [PhongController::class, 'update']);
         Route::delete('/admin/phong/{id}', [PhongController::class, 'destroy']);
+
+        // Cập nhật tiện ích cho phòng
+        Route::get('/admin/phong/{id}/tien-ich', [PhongController::class, 'layTienIch']);
+        Route::post('/admin/phong/{id}/tien-ich', [PhongController::class, 'capNhatTienIch']);
         
         // Quản lý loại phòng
         Route::get('/admin/loai-phong', [LoaiPhongController::class, 'index']);
@@ -56,6 +60,7 @@ Route::middleware('auth:sanctum')
 
         // Quản lý hóa đơn
         Route::get('/admin/hoa-don/du-lieu-form', [HoaDonController::class, 'layDuLieuForm']);
+        Route::get('/admin/hoa-don/chi-so-moi-nhat/{phong_id}', [HoaDonController::class, 'layChiSoMoiNhat']);
         Route::get('/admin/hoa-don', [HoaDonController::class, 'index']);
         Route::post('/admin/hoa-don', [HoaDonController::class, 'store']);
         Route::get('/admin/hoa-don/{id}/chi-tiet', [HoaDonController::class, 'layChiTiet']);

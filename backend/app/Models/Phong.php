@@ -32,4 +32,9 @@ class Phong extends Model
     {
         return $this->belongsTo(Tang::class, 'tang_id');
     }
+
+    public function tienIch()
+    {
+        return $this->belongsToMany(TienIch::class, 'tien_ich_phong', 'phong_id', 'tien_ich_id');
+    }
 }

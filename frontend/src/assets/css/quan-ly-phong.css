@@ -98,3 +98,15 @@
     transform: translateY(0);
   }
 }
+
+.badge-tien-ich {
+  display: inline-block;
+  background-color: #e0f7f4;
+  color: #007a6a;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid #b2e8e2;
+  white-space: nowrap;
+}

@@ -10,7 +10,7 @@ class PhongController extends Controller
 {
     public function index()
     {
-        $danhSachPhong = Phong::with('loaiPhong')->orderBy('so_phong', 'asc')->get();
+        $danhSachPhong = Phong::with(['loaiPhong', 'tienIch'])->orderBy('so_phong', 'asc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $danhSachPhong
@@ -101,5 +101,38 @@ class PhongController extends Controller
             'status' => 'success',
             'message' => 'Đã xóa phòng thành công!'
         ]);
+    }
+    public function layTienIch($id)
+    {
+        $tienIchIds = \Illuminate\Support\Facades\DB::table('tien_ich_phong')
+            ->where('phong_id', $id)
+            ->pluck('tien_ich_id');
+            
+        return response()->json(['status' => 'success', 'data' => $tienIchIds]);
+    }
+
+    public function capNhatTienIch(Request $request, $id)
+    {
+        $request->validate([
+            'tien_ich_ids' => 'array'
+        ]);
+
+        \Illuminate\Support\Facades\DB::table('tien_ich_phong')->where('phong_id', $id)->delete();
+
+        $duLieuMoi = [];
+        foreach ($request->tien_ich_ids as $ti_id) {
+            $duLieuMoi[] = [
+                'phong_id' => $id,
+                'tien_ich_id' => $ti_id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+        }
+
+        if (count($duLieuMoi) > 0) {
+            \Illuminate\Support\Facades\DB::table('tien_ich_phong')->insert($duLieuMoi);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Đã cập nhật tiện ích cho phòng!']);
     }
 }

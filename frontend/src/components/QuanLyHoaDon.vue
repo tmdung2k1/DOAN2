@@ -4,6 +4,9 @@ import { inHoaDon as inHoaDonUtil } from '../utils/inHoaDon.js'
 
 const danhSachHoaDon = ref([])
 const danhSachHopDong = ref([])
+const caiDat = ref({ gia_dien: 3500, gia_nuoc: 15000 })
+const chiSoPhong = ref({ dien: null, nuoc: null })
+const dangLayChiSo = ref(false)
 const dangTai = ref(true)
 const dangLuu = ref(false)
 const thongBao = ref({ hien: false, loai: '', noi_dung: '' })
@@ -80,7 +83,10 @@ const layDuLieuForm = async () => {
       headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
     })
     const result = await res.json()
-    if (result.status === 'success') danhSachHopDong.value = result.hop_dongs
+    if (result.status === 'success') {
+      danhSachHopDong.value = result.hop_dongs
+      if (result.cai_dat) caiDat.value = result.cai_dat
+    }
   } catch (e) { console.error(e) }
 }
 
@@ -98,20 +104,84 @@ const moModalThem = () => {
   hienThiModal.value = true
 }
 
-const chonHopDong = () => {
-  const hd = danhSachHopDong.value.find(h => h.id == formHoaDon.value.hop_dong_id)
-  hopDongDuocChon.value = hd || null
-  if (hd) {
-    const dongPhong = formHoaDon.value.chi_tiet.find(c => c.loai_phi === 'tien_phong')
-    if (dongPhong) {
-      dongPhong.don_gia = hd.gia_thue_hang_thang
-      dongPhong.thanh_tien = dongPhong.so_luong * dongPhong.don_gia
-    }
+const donGiaMacDinh = (loaiPhi) => {
+  const hd = hopDongDuocChon.value
+  switch (loaiPhi) {
+    case 'tien_phong': return hd ? Number(hd.gia_thue_hang_thang) : 0
+    case 'tien_dien':  return Number(caiDat.value.gia_dien)
+    case 'tien_nuoc':  return Number(caiDat.value.gia_nuoc)
+    case 'rac':        return 20000
+    case 'wifi':       return 30000
+    default:           return 0
   }
 }
 
+const layChiSoPhong = async (phongId) => {
+  dangLayChiSo.value = true
+  chiSoPhong.value = { dien: null, nuoc: null }
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/hoa-don/chi-so-moi-nhat/${phongId}`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      chiSoPhong.value = { dien: result.dien, nuoc: result.nuoc }
+    }
+  } catch (e) { console.error(e) }
+  dangLayChiSo.value = false
+}
+
+const chonHopDong = async () => {
+  const hd = danhSachHopDong.value.find(h => h.id == formHoaDon.value.hop_dong_id)
+  hopDongDuocChon.value = hd || null
+  if (!hd) return
+
+  await layChiSoPhong(hd.phong_id)
+
+  formHoaDon.value.chi_tiet.forEach(item => {
+    if (item.loai_phi === 'tien_dien' && chiSoPhong.value.dien) {
+      item.so_luong = chiSoPhong.value.dien.tieu_thu
+      item.don_gia  = chiSoPhong.value.dien.don_gia
+    } else if (item.loai_phi === 'tien_nuoc' && chiSoPhong.value.nuoc) {
+      item.so_luong = chiSoPhong.value.nuoc.tieu_thu
+      item.don_gia  = chiSoPhong.value.nuoc.don_gia
+    } else {
+      item.don_gia = donGiaMacDinh(item.loai_phi)
+    }
+    item.thanh_tien = Number(item.so_luong) * Number(item.don_gia)
+  })
+}
+
+const doiLoaiPhi = (i) => {
+  const item = formHoaDon.value.chi_tiet[i]
+  if (item.loai_phi === 'tien_dien' && chiSoPhong.value.dien) {
+    item.so_luong = chiSoPhong.value.dien.tieu_thu
+    item.don_gia  = chiSoPhong.value.dien.don_gia
+  } else if (item.loai_phi === 'tien_nuoc' && chiSoPhong.value.nuoc) {
+    item.so_luong = chiSoPhong.value.nuoc.tieu_thu
+    item.don_gia  = chiSoPhong.value.nuoc.don_gia
+  } else {
+    item.don_gia = donGiaMacDinh(item.loai_phi)
+  }
+  item.thanh_tien = Number(item.so_luong) * Number(item.don_gia)
+}
+
 const themDong = () => {
-  formHoaDon.value.chi_tiet.push({ loai_phi: 'tien_dien', so_luong: 1, don_gia: 0, thanh_tien: 0 })
+  const loai = 'tien_dien'
+  let so_luong = 1
+  let don_gia = donGiaMacDinh(loai)
+
+  if (chiSoPhong.value.dien) {
+    so_luong = chiSoPhong.value.dien.tieu_thu
+    don_gia  = chiSoPhong.value.dien.don_gia
+  }
+
+  formHoaDon.value.chi_tiet.push({
+    loai_phi: loai,
+    so_luong,
+    don_gia,
+    thanh_tien: so_luong * don_gia
+  })
 }
 
 const xoaDong = (i) => {
@@ -322,6 +392,11 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
               <span>🏠 <strong>Phòng {{ hopDongDuocChon.so_phong }}</strong></span>
               <span>👤 {{ hopDongDuocChon.ho_ten }}</span>
               <span>💵 Giá thuê: <strong>{{ fmt(hopDongDuocChon.gia_thue_hang_thang) }}</strong>/tháng</span>
+              <span v-if="dangLayChiSo" class="chi-so-loading">⏳ Đang tải chỉ số...</span>
+              <span v-else-if="chiSoPhong.dien || chiSoPhong.nuoc" class="chi-so-found">
+                <span v-if="chiSoPhong.dien">⚡ {{ chiSoPhong.dien.tieu_thu }} kWh</span>
+                <span v-if="chiSoPhong.nuoc">💧 {{ chiSoPhong.nuoc.tieu_thu }} khối</span>
+              </span>
             </div>
             <div class="chi-tiet-table">
               <div class="ct-header">
@@ -338,7 +413,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
                 class="ct-row"
               >
                 <div class="ct-col-type">
-                  <select v-model="item.loai_phi" class="form-ctrl-sm">
+                  <select v-model="item.loai_phi" @change="doiLoaiPhi(i)" class="form-ctrl-sm">
                     <option value="tien_phong">🏠 Tiền phòng</option>
                     <option value="tien_dien">⚡ Tiền điện</option>
                     <option value="tien_nuoc">💧 Tiền nước</option>
@@ -354,6 +429,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
                     type="number" min="0" step="0.1"
                     class="form-ctrl-sm text-center"
                     placeholder="1"
+                    :disabled="dangLayChiSo"
                     required
                   >
                 </div>
@@ -363,7 +439,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
                     @input="tinhTien(i)"
                     type="number" min="0"
                     class="form-ctrl-sm"
-                    placeholder="0"
+                    :placeholder="donGiaMacDinh(item.loai_phi).toLocaleString('vi-VN')"
                     required
                   >
                 </div>

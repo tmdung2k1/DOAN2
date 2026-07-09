@@ -41,10 +41,54 @@ class HoaDonController extends Controller
             ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
             ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
             ->where('hop_dong.trang_thai', 'hieu_luc')
-            ->select('hop_dong.id', 'phong.so_phong', 'tai_khoans.ho_ten', 'hop_dong.gia_thue_hang_thang')
+            ->select(
+                'hop_dong.id',
+                'hop_dong.phong_id',
+                'phong.so_phong',
+                'tai_khoans.ho_ten',
+                'hop_dong.gia_thue_hang_thang'
+            )
             ->get();
 
-        return response()->json(['status' => 'success', 'hop_dongs' => $hopDongs]);
+        $caiDat = \App\Models\CaiDat::first();
+        if (!$caiDat) {
+            $caiDat = \App\Models\CaiDat::create(['gia_dien' => 3500, 'gia_nuoc' => 15000]);
+        }
+
+        return response()->json([
+            'status'    => 'success',
+            'hop_dongs' => $hopDongs,
+            'cai_dat'   => $caiDat,
+        ]);
+    }
+
+    public function layChiSoMoiNhat($phong_id)
+    {
+        $dien = DB::table('chi_so_dien_nuoc')
+            ->where('phong_id', $phong_id)
+            ->where('loai_chi_so', 'dien')
+            ->orderBy('thang_ghi_nhan', 'desc')
+            ->first();
+
+        $nuoc = DB::table('chi_so_dien_nuoc')
+            ->where('phong_id', $phong_id)
+            ->where('loai_chi_so', 'nuoc')
+            ->orderBy('thang_ghi_nhan', 'desc')
+            ->first();
+
+        return response()->json([
+            'status' => 'success',
+            'dien'   => $dien ? [
+                'tieu_thu' => $dien->chi_so_moi - $dien->chi_so_cu,
+                'don_gia'  => $dien->don_gia,
+                'thang'    => $dien->thang_ghi_nhan,
+            ] : null,
+            'nuoc'   => $nuoc ? [
+                'tieu_thu' => $nuoc->chi_so_moi - $nuoc->chi_so_cu,
+                'don_gia'  => $nuoc->don_gia,
+                'thang'    => $nuoc->thang_ghi_nhan,
+            ] : null,
+        ]);
     }
 
     public function store(Request $request)
