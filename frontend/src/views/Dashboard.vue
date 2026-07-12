@@ -9,6 +9,7 @@ import QuanLyHopDong from '../components/QuanLyHopDong.vue'
 import QuanLyDienNuoc from '../components/QuanLyDienNuoc.vue'
 import QuanLyHoaDon from '../components/QuanLyHoaDon.vue'
 import QuanLyTienIch from '../components/QuanLiTienIch.vue'
+import QuanLyDichVu from '../components/QuanLyDichVu.vue'
 
 const router = useRouter()
 
@@ -99,6 +100,14 @@ const toggleSidebar = () => {
           </a>
         </li>
         <li class="nav-item">
+          <a @click.prevent="tabHienTai = 'dich-vu'" 
+             :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2', tabHienTai === 'dich-vu' ? 'active-menu' : '']" 
+             href="#">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span v-if="!sidebarThuGon">Quản lý Dịch Vụ</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a @click.prevent="moModalCaiDat = true" 
              :class="['nav-link text-white fw-bold px-3 py-2 d-flex align-items-center gap-2']" 
              href="#">
@@ -123,6 +132,7 @@ const toggleSidebar = () => {
         <QuanLyTienIch v-else-if="tabHienTai === 'tien-ich'" />
         <QuanLyDienNuoc v-else-if="tabHienTai === 'dien-nuoc'" />
         <QuanLyHoaDon v-else-if="tabHienTai === 'hoa-don'" />
+        <QuanLyDichVu v-else-if="tabHienTai === 'dich-vu'" />
       </div>
     </div>
 

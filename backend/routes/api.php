@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\HopDongController;
 use App\Http\Controllers\Api\ChiSoDienNuocController;
 use App\Http\Controllers\Api\HoaDonController;
 use App\Http\Controllers\Api\TienIchController;
+use App\Http\Controllers\Api\DichVuController;
 
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
 
@@ -70,4 +71,10 @@ Route::middleware('auth:sanctum')
         Route::get('/admin/tien-ich', [TienIchController::class, 'index']);
         Route::post('/admin/tien-ich', [TienIchController::class, 'store']);
         Route::delete('/admin/tien-ich/{id}', [TienIchController::class, 'destroy']);
+
+        // Quản lý Dịch Vụ
+        Route::get('/admin/dich-vu', [DichVuController::class, 'index']);
+        Route::post('/admin/dich-vu', [DichVuController::class, 'store']);
+        Route::put('/admin/dich-vu/{id}', [DichVuController::class, 'update']);
+        Route::delete('/admin/dich-vu/{id}', [DichVuController::class, 'destroy']);
     });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\HoaDon;
 use App\Models\ChiTietHoaDon;
+use App\Models\DichVu;
 use Illuminate\Support\Facades\DB;
 
 class HoaDonController extends Controller
@@ -59,6 +60,7 @@ class HoaDonController extends Controller
             'status'    => 'success',
             'hop_dongs' => $hopDongs,
             'cai_dat'   => $caiDat,
+            'dich_vus'  => DichVu::where('active', true)->orderBy('id', 'asc')->get(),
         ]);
     }
 
