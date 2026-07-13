@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ChiSoDienNuocController;
 use App\Http\Controllers\Api\HoaDonController;
 use App\Http\Controllers\Api\TienIchController;
 use App\Http\Controllers\Api\DichVuController;
+use App\Http\Controllers\Api\HinhAnhPhongController;
 
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
 
@@ -77,4 +78,9 @@ Route::middleware('auth:sanctum')
         Route::post('/admin/dich-vu', [DichVuController::class, 'store']);
         Route::put('/admin/dich-vu/{id}', [DichVuController::class, 'update']);
         Route::delete('/admin/dich-vu/{id}', [DichVuController::class, 'destroy']);
+
+        // Quản lý Hình Ảnh Phòng
+        Route::get('/admin/phong/{id}/hinh-anh', [HinhAnhPhongController::class, 'layAnhCuaPhong']);
+        Route::post('/admin/phong/{id}/hinh-anh', [HinhAnhPhongController::class, 'uploadAnh']);
+        Route::delete('/admin/hinh-anh/{id}', [HinhAnhPhongController::class, 'xoaAnh']);
     });
