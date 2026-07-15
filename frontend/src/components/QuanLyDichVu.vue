@@ -112,10 +112,10 @@ onMounted(() => layDanhSach())
 
     <transition name="modal">
       <div v-if="hienThiModal" class="dv-modal-bg" @click.self="hienThiModal = false">
-        <div class="dv-modal">
-          <div class="dv-modal-hd">
-            <h5>{{ dangSua ? '✏️ Sửa Dịch Vụ' : '＋ Thêm Dịch Vụ Mới' }}</h5>
-            <button @click="hienThiModal = false" class="dv-btn-close">✕</button>
+        <div class="dv-modal" style="border: none; border-radius: 12px; overflow: hidden; max-width: 500px; width: 90%;">
+          <div class="dv-modal-hd" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-bottom: none; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+            <h5 style="margin: 0; font-weight: 700; color: white; font-size: 1.1rem;">{{ dangSua ? '✏️ Sửa Dịch Vụ' : '＋ Thêm Dịch Vụ Mới' }}</h5>
+            <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
           </div>
           <form @submit.prevent="luu" class="dv-modal-body">
             <div class="dv-form-group">

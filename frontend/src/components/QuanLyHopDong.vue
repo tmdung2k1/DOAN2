@@ -280,11 +280,11 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
 
     <transition name="modal-fade">
       <div v-if="hienThiModal" class="modal-bg" @click.self="hienThiModal = false">
-        <div class="modal-box">
+        <div class="modal-box" style="border: none; border-radius: 12px; overflow: hidden;">
 
-          <div class="modal-hd">
-            <h5 class="modal-title">📋 Tạo Hợp Đồng Thuê Phòng</h5>
-            <button @click="hienThiModal = false" class="btn-close-x" title="Đóng">✕</button>
+          <div class="modal-hd" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-bottom: none; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+            <h5 class="modal-title text-white fw-bold m-0" style="font-size: 1.1rem;">📋 Tạo Hợp Đồng Thuê Phòng</h5>
+            <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
           </div>
 
           <div v-if="loiForm" class="err-box">⚠️ {{ loiForm }}</div>

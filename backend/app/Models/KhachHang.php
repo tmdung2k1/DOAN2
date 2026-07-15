@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class KhachHang extends Model
+{
+    protected $table = 'khach_hang';
+
+    protected $fillable = [
+        'hop_dong_id',
+        'ho_ten',
+        'cccd',
+        'so_dien_thoai',
+        'dia_chi',
+    ];
+}

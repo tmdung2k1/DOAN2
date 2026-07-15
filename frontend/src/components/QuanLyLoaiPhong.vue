@@ -97,12 +97,12 @@ onMounted(() => layDanhSach())
     </div>
 
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
-      <div class="modal-content bg-white p-4 rounded shadow-lg">
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-          <h5 class="fw-bold m-0">{{ laCheDoSua ? 'Sửa Loại Phòng' : 'Thêm Mới' }}</h5>
-          <button @click="hienThiModal = false" class="btn btn-link text-danger text-decoration-none fw-bold p-0">X</button>
+      <div class="modal-content bg-white rounded shadow-lg" style="max-width: 500px; width: 90%;">
+        <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
+          <h5 class="fw-bold m-0 text-white">{{ laCheDoSua ? 'Sửa Loại Phòng' : 'Thêm Mới' }}</h5>
+          <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
         </div>
-        <form @submit.prevent="luuDuLieu">
+        <form @submit.prevent="luuDuLieu" class="p-4">
           <div class="mb-4">
             <label class="form-label small fw-bold text-dark-blue text-uppercase">Tên Loại Phòng</label>
             <input v-model="formLoai.ten_loai" type="text" class="form-control custom-input" placeholder="VD: Phòng Studio, Phòng Trống..." required>

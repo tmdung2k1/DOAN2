@@ -119,11 +119,12 @@ onMounted(() => layDanhSachTienIch())
     </div>
 
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
-      <div class="modal-content bg-white p-4 rounded shadow-lg">
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-          <h5 class="fw-bold text-dark-blue m-0">Thêm Tiện Ích Mới</h5>
-          <button @click="hienThiModal = false" class="btn btn-link text-danger text-decoration-none fw-bold p-0">X</button>
+      <div class="modal-content bg-white rounded shadow-lg" style="max-width: 500px; width: 90%;">
+        <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
+          <h5 class="fw-bold m-0 text-white">Thêm Tiện Ích Mới</h5>
+          <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
         </div>
+        <div class="p-4">
 
         <form @submit.prevent="luuTienIch">
           <div class="mb-3">
@@ -145,6 +146,7 @@ onMounted(() => layDanhSachTienIch())
             <button type="submit" class="btn btn-purple fw-bold px-4">Lưu Lại</button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   </div>

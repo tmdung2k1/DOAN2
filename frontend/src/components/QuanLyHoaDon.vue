@@ -347,10 +347,10 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
 
     <transition name="modal">
       <div v-if="hienThiModal" class="modal-bg" @click.self="hienThiModal = false">
-        <div class="modal-box">
-          <div class="modal-hd">
-            <h5 class="modal-title">🧾 Lập Hóa Đơn Thu Tiền</h5>
-            <button @click="hienThiModal = false" class="btn-close-modal" title="Đóng">✕</button>
+        <div class="modal-box" style="border: none; border-radius: 12px; overflow: hidden;">
+          <div class="modal-hd" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-bottom: none; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+            <h5 class="modal-title text-white fw-bold m-0" style="font-size: 1.1rem;">🧾 Lập Hóa Đơn Thu Tiền</h5>
+            <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
           </div>
 
           <form @submit.prevent="luuHoaDon" class="modal-body">
@@ -447,19 +447,19 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
 
     <transition name="modal">
       <div v-if="hienThiModalChiTiet" class="modal-bg" @click.self="hienThiModalChiTiet = false">
-        <div class="modal-box modal-chitiet">
-          <div class="modal-hd">
-            <div class="modal-hd-left">
-              <div class="modal-invoice-badge"><span>🧾</span></div>
+        <div class="modal-box modal-chitiet" style="border: none; border-radius: 12px; overflow: hidden;">
+          <div class="modal-hd" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-bottom: none; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+            <div class="modal-hd-left" style="display: flex; align-items: center; gap: 0.75rem;">
+              <div class="modal-invoice-badge" style="background: rgba(255, 255, 255, 0.1); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;"><span>🧾</span></div>
               <div>
-                <h5 class="modal-title">Chi Tiết Hóa Đơn</h5>
-                <p v-if="thongTinHoaDonDangXem" class="modal-sub">
-                  <span class="ma-hd-badge">{{ thongTinHoaDonDangXem.ma_hoa_don }}</span>
+                <h5 class="modal-title text-white fw-bold m-0" style="font-size: 1.1rem;">Chi Tiết Hóa Đơn</h5>
+                <p v-if="thongTinHoaDonDangXem" class="modal-sub m-0" style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 2px !important;">
+                  <span class="ma-hd-badge" style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-family: monospace;">{{ thongTinHoaDonDangXem.ma_hoa_don }}</span>
                 </p>
               </div>
             </div>
             <div class="modal-hd-actions">
-              <button @click="hienThiModalChiTiet = false" class="btn-close-modal" title="Đóng">✕</button>
+              <button @click="hienThiModalChiTiet = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
             </div>
           </div>
 

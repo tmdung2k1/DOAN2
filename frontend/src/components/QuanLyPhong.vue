@@ -410,9 +410,9 @@ onMounted(() => {
     <!-- MODAL THÊM / SỬA PHÒNG -->
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 720px; width: 96%; max-height: 92vh; overflow-y: auto;">
-        <div class="d-flex justify-content-between align-items-center border-bottom p-4 pb-3 sticky-top bg-white" style="z-index:1;">
-          <h5 class="fw-bold text-dark-blue m-0">{{ laCheDoSua ? 'Cập Nhật Phòng' : 'Thêm Phòng Mới' }}</h5>
-          <button @click="hienThiModal = false" class="btn btn-link text-danger text-decoration-none fw-bold p-0">✕ Đóng</button>
+        <div class="d-flex justify-content-between align-items-center p-4 pb-3 sticky-top text-white" style="z-index:1; background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
+          <h5 class="fw-bold m-0 text-white">{{ laCheDoSua ? 'Cập Nhật Phòng' : 'Thêm Phòng Mới' }}</h5>
+          <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
         </div>
 
         <form @submit.prevent="luuPhong" class="p-4">
@@ -549,15 +549,16 @@ onMounted(() => {
 
     <!-- MODAL TIỆN ÍCH -->
     <div v-if="hienThiModalTienIch" class="modal-overlay d-flex justify-content-center align-items-center">
-      <div class="modal-content bg-white p-4 rounded shadow-lg" style="max-width: 520px; width: 100%;">
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-          <h5 class="fw-bold text-dark-blue m-0">
-            Tiện Ích – <span class="text-purple">Phòng {{ phongDangChonTienIch?.so_phong }}</span>
+      <div class="modal-content bg-white rounded shadow-lg" style="max-width: 520px; width: 100%;">
+        <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
+          <h5 class="fw-bold m-0 text-white">
+            Tiện Ích – <span class="text-white-50">Phòng {{ phongDangChonTienIch?.so_phong }}</span>
           </h5>
-          <button @click="hienThiModalTienIch = false" class="btn btn-link text-danger text-decoration-none fw-bold p-0">✕ Đóng</button>
+          <button @click="hienThiModalTienIch = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
         </div>
 
-        <div v-if="danhSachTatCaTienIch.length === 0" class="text-center text-muted py-3">
+        <div class="p-4">
+          <div v-if="danhSachTatCaTienIch.length === 0" class="text-center text-muted py-3">
           Chưa có tiện ích nào trong kho. Vui lòng thêm tiện ích trước.
         </div>
 
@@ -578,6 +579,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+</div>
 
   <teleport to="body">
     <div class="toast-container">

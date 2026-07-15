@@ -66,9 +66,9 @@ onMounted(() => layDuLieuCaiDat())
   <div v-if="isOpen" class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-white border-bottom-0 p-4">
-          <h5 class="modal-title fw-bold text-dark-blue">⚙️ Thiết Lập Đơn Giá Điện / Nước</h5>
-          <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+        <div class="modal-header p-4 border-bottom-0" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; color: white;">
+          <h5 class="modal-title fw-bold text-white m-0" style="font-size: 1.1rem;">⚙️ Thiết Lập Đơn Giá Điện / Nước</h5>
+          <button type="button" class="btn btn-sm btn-outline-light fw-bold" @click="closeModal">✕ Đóng</button>
         </div>
 
         <div class="modal-body p-4">

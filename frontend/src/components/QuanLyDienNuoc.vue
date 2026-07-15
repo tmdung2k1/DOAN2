@@ -192,17 +192,18 @@ onMounted(() => {
     </div>
 
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
-      <div class="modal-content bg-white p-4 rounded shadow-lg">
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-          <h5 class="fw-bold text-dark-blue m-0">Ghi Chỉ Số Điện Nước</h5>
-          <button @click="hienThiModal = false" class="btn btn-link text-danger text-decoration-none fw-bold p-0">X</button>
+      <div class="modal-content bg-white rounded shadow-lg" style="max-width: 650px; width: 95%;">
+        <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
+          <h5 class="fw-bold m-0 text-white">Ghi Chỉ Số Điện Nước</h5>
+          <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
         </div>
 
-        <div v-if="loiForm" class="alert-error px-3 py-2 rounded mb-3">
-          ⚠️ {{ loiForm }}
-        </div>
+        <div class="p-4">
+          <div v-if="loiForm" class="alert-error px-3 py-2 rounded mb-3">
+            ⚠️ {{ loiForm }}
+          </div>
 
-        <form @submit.prevent="luuChiSo">
+          <form @submit.prevent="luuChiSo">
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Chọn Phòng (Đang thuê)</label>
@@ -293,6 +294,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <style scoped>
