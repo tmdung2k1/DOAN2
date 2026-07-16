@@ -164,6 +164,60 @@ const tongHetHan  = computed(() => danhSachHopDong.value.filter(h => h.trang_tha
 const fmt    = (n) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n)
 const fmtNgay = (d) => new Date(d).toLocaleDateString('vi-VN')
 
+const hienThiModalKhachHang = ref(false)
+const danhSachKhachHang = ref([])
+const hopDongDangChonKhach = ref(null)
+const formKhachHang = ref({ hop_dong_id: '', ho_ten: '', cccd: '', so_dien_thoai: '' })
+
+const moModalKhachHang = async (hopDong) => {
+  hopDongDangChonKhach.value = hopDong
+  formKhachHang.value = { hop_dong_id: hopDong.id, ho_ten: '', cccd: '', so_dien_thoai: '' }
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/hop-dong/${hopDong.id}/khach-hang`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      danhSachKhachHang.value = result.data
+      hienThiModalKhachHang.value = true
+    }
+  } catch (error) { console.error(error) }
+}
+
+const luuKhachHang = async () => {
+  try {
+    const res = await fetch('http://127.0.0.1:8000/api/admin/khach-hang', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formKhachHang.value)
+    })
+    const result = await res.json()
+    if (result.status === 'success') {
+      danhSachKhachHang.value.push(result.data)
+      formKhachHang.value.ho_ten = ''
+      formKhachHang.value.cccd = ''
+      formKhachHang.value.so_dien_thoai = ''
+    }
+  } catch (error) { alert('Lỗi kết nối máy chủ!') }
+}
+
+const xoaKhachHang = async (id, index) => {
+  if (!confirm('Xóa người này khỏi danh sách ở ghép?')) return
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/khach-hang/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    if ((await res.json()).status === 'success') {
+      danhSachKhachHang.value.splice(index, 1)
+    }
+  } catch (error) { alert('Lỗi kết nối!') }
+}
+
 onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
 </script>
 
@@ -262,6 +316,9 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
             </div>
 
             <div class="card-actions">
+              <button @click="moModalKhachHang(hd)" class="btn-cotenants">
+                👥 Khách ở cùng
+              </button>
               <button @click="taiFilePDF(hd.id, hd.ma_hop_dong)" class="btn-pdf">
                 📄 Xuất PDF
               </button>
@@ -347,6 +404,63 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
                 <span v-if="dangLuu">⏳ Đang lưu...</span>
                 <span v-else>✔ Tạo Hợp Đồng</span>
               </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="modal-fade">
+      <div v-if="hienThiModalKhachHang" class="khach-hang-overlay" @click.self="hienThiModalKhachHang = false">
+        <div class="khach-hang-modal">
+          <div class="khach-hang-header">
+            <h5 class="khach-hang-title">👥 Người Ở Cùng — Phòng {{ hopDongDangChonKhach?.so_phong }}</h5>
+            <button @click="hienThiModalKhachHang = false" class="khach-hang-close">✕</button>
+          </div>
+
+          <div class="khach-hang-table-wrapper">
+            <table class="khach-hang-table">
+              <thead>
+                <tr>
+                  <th>Họ Tên</th>
+                  <th>CCCD</th>
+                  <th>Điện Thoại</th>
+                  <th class="text-end">Xóa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="danhSachKhachHang.length === 0">
+                  <td colspan="4" class="khach-hang-empty">Chưa có khách ở ghép.</td>
+                </tr>
+                <tr v-for="(kh, index) in danhSachKhachHang" :key="kh.id">
+                  <td class="khach-hang-fw-bold">{{ kh.ho_ten }}</td>
+                  <td>{{ kh.cccd || '---' }}</td>
+                  <td>{{ kh.so_dien_thoai || '---' }}</td>
+                  <td class="text-end">
+                    <button @click="xoaKhachHang(kh.id, index)" class="khach-hang-btn-delete">✕</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <form @submit.prevent="luuKhachHang" class="khach-hang-form">
+            <div class="khach-hang-row">
+              <div class="khach-hang-col-4">
+                <label class="khach-hang-label">Họ và Tên (*)</label>
+                <input v-model="formKhachHang.ho_ten" type="text" class="khach-hang-input" required>
+              </div>
+              <div class="khach-hang-col-3">
+                <label class="khach-hang-label">CCCD</label>
+                <input v-model="formKhachHang.cccd" type="text" class="khach-hang-input">
+              </div>
+              <div class="khach-hang-col-3">
+                <label class="khach-hang-label">Điện Thoại</label>
+                <input v-model="formKhachHang.so_dien_thoai" type="text" class="khach-hang-input">
+              </div>
+              <div class="khach-hang-col-2 khach-hang-flex-end">
+                <button type="submit" class="khach-hang-btn-add">+ Thêm</button>
+              </div>
             </div>
           </form>
         </div>

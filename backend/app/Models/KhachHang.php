@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KhachHang extends Model
 {
+    use HasFactory;
+
     protected $table = 'khach_hang';
 
-    protected $fillable = [
-        'hop_dong_id',
-        'ho_ten',
-        'cccd',
-        'so_dien_thoai',
-        'dia_chi',
-    ];
+    protected $guarded = [];
 }

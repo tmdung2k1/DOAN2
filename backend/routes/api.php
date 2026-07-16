@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\HoaDonController;
 use App\Http\Controllers\Api\TienIchController;
 use App\Http\Controllers\Api\DichVuController;
 use App\Http\Controllers\Api\HinhAnhPhongController;
+use App\Http\Controllers\Api\KhachHangController;
 
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
 
@@ -83,4 +84,9 @@ Route::middleware('auth:sanctum')
         Route::get('/admin/phong/{id}/hinh-anh', [HinhAnhPhongController::class, 'layAnhCuaPhong']);
         Route::post('/admin/phong/{id}/hinh-anh', [HinhAnhPhongController::class, 'uploadAnh']);
         Route::delete('/admin/hinh-anh/{id}', [HinhAnhPhongController::class, 'xoaAnh']);
+
+        // API Quản lý Người Ở Ghép (Bảng khach_hang)
+        Route::get('/admin/hop-dong/{hop_dong_id}/khach-hang', [KhachHangController::class, 'layTheoHopDong']);
+        Route::post('/admin/khach-hang', [KhachHangController::class, 'store']);
+        Route::delete('/admin/khach-hang/{id}', [KhachHangController::class, 'destroy']);
     });

@@ -308,11 +308,11 @@ onMounted(() => {
       </table>
     </div>
 
-    <!-- MODAL CHI TIẾT PHÒNG -->
+
     <div v-if="hienThiModalChiTiet" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 780px; width: 96%; max-height: 92vh; overflow-y: auto;">
 
-        <!-- Header -->
+
         <div class="detail-header p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
           <div>
             <div class="d-flex align-items-center gap-3">
@@ -330,7 +330,7 @@ onMounted(() => {
         </div>
 
         <div class="p-4">
-          <!-- Thống kê nhanh -->
+
           <div class="row g-3 mb-4">
             <div class="col-md-4">
               <div class="stat-card d-flex align-items-center gap-3 p-3 rounded" style="background:#f5f3ff; border:1px solid #ede9fe;">
@@ -361,7 +361,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Tiện ích -->
+
           <div class="mb-4">
             <h6 class="fw-bold text-dark-blue mb-2">🔌 Tiện Ích</h6>
             <div v-if="phongChiTiet?.tien_ich && phongChiTiet.tien_ich.length > 0" class="d-flex flex-wrap gap-2">
@@ -370,7 +370,7 @@ onMounted(() => {
             <p v-else class="text-muted fst-italic small">Chưa có tiện ích nào được gán.</p>
           </div>
 
-          <!-- Hình ảnh -->
+
           <div>
             <h6 class="fw-bold text-dark-blue mb-3">🖼 Hình Ảnh Phòng</h6>
             <div v-if="dangTaiChiTiet" class="text-center text-purple py-3">Đang tải ảnh...</div>
@@ -390,14 +390,14 @@ onMounted(() => {
             </div>
           </div>
 
-          <!-- Nút tác vụ nhanh -->
+
           <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
             <button @click="hienThiModalChiTiet = false; moModalTienIch(phongChiTiet)" class="btn btn-info text-white fw-bold">📦 Quản lý Tiện Ích</button>
             <button @click="hienThiModalChiTiet = false; moModalSua(phongChiTiet)" class="btn btn-purple fw-bold">✏️ Chỉnh Sửa Phòng</button>
           </div>
         </div>
 
-        <!-- LIGHTBOX -->
+
         <div v-if="anhLightbox" @click="anhLightbox = null" class="lightbox-overlay d-flex align-items-center justify-content-center">
           <div @click.stop class="lightbox-inner position-relative">
             <img :src="anhLightbox" class="rounded shadow-lg" style="max-width:90vw; max-height:82vh; object-fit:contain;" />
@@ -407,7 +407,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- MODAL THÊM / SỬA PHÒNG -->
+
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 720px; width: 96%; max-height: 92vh; overflow-y: auto;">
         <div class="d-flex justify-content-between align-items-center p-4 pb-3 sticky-top text-white" style="z-index:1; background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
@@ -452,14 +452,14 @@ onMounted(() => {
               </select>
             </div>
 
-            <!-- ===== KHU VỰC ẢNH KHI THÊM MỚI ===== -->
+
             <div v-if="!laCheDoSua" class="col-12">
               <div class="section-anh-header d-flex justify-content-between align-items-center mb-2">
                 <label class="form-label small fw-bold text-dark-blue text-uppercase m-0">🖼 Hình Ảnh Phòng</label>
                 <span class="badge bg-secondary">{{ xemTruocAnh.length }} ảnh đã chọn</span>
               </div>
 
-              <!-- Dropzone chọn ảnh -->
+
               <label for="input-anh-them" class="upload-zone d-flex flex-column align-items-center justify-content-center gap-2 rounded border-2 border-dashed p-4 mb-3" style="cursor:pointer; border-color:#c4b5fd; background: #faf5ff;">
                 <span style="font-size:2rem;">📁</span>
                 <span class="fw-bold text-purple small">Nhấn để chọn ảnh</span>
@@ -467,7 +467,7 @@ onMounted(() => {
                 <input type="file" id="input-anh-them" @change="chonNhieuAnh" accept="image/png,image/jpeg,image/jpg,image/webp" multiple class="d-none">
               </label>
 
-              <!-- Grid preview ảnh đã chọn -->
+
               <div v-if="xemTruocAnh.length > 0" class="row g-2">
                 <div v-for="(src, i) in xemTruocAnh" :key="i" class="col-4 col-md-3 position-relative">
                   <div class="img-preview-wrap rounded overflow-hidden border shadow-sm" style="height:110px;">
@@ -479,7 +479,7 @@ onMounted(() => {
                   <span class="d-block text-center text-muted mt-1" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Ảnh {{ i + 1 }}</span>
                 </div>
 
-                <!-- Ô thêm ảnh nhanh -->
+
                 <div class="col-4 col-md-3">
                   <label for="input-anh-them" class="add-more-btn d-flex flex-column align-items-center justify-content-center border rounded gap-1" style="height:110px; cursor:pointer; border-style:dashed; border-color:#c4b5fd; background:#faf5ff;">
                     <span style="font-size:1.6rem; color:#7c3aed;">＋</span>
@@ -489,14 +489,14 @@ onMounted(() => {
               </div>
             </div>
 
-            <!-- ===== KHU VỰC ẢNH KHI SỬA ===== -->
+
             <div v-if="laCheDoSua" class="col-12">
               <div class="section-anh-header d-flex justify-content-between align-items-center mb-3">
                 <label class="form-label small fw-bold text-dark-blue text-uppercase m-0">🖼 Hình Ảnh Phòng</label>
                 <span class="badge bg-secondary">{{ danhSachAnhHienCo.length }} ảnh hiện có</span>
               </div>
 
-              <!-- Ảnh hiện có -->
+
               <div v-if="danhSachAnhHienCo.length > 0" class="row g-2 mb-3">
                 <div v-for="(anh, i) in danhSachAnhHienCo" :key="anh.id" class="col-4 col-md-3 position-relative">
                   <div class="img-preview-wrap rounded overflow-hidden border shadow-sm" style="height:110px;">
@@ -513,7 +513,7 @@ onMounted(() => {
                 <span class="small">Phòng này chưa có ảnh nào</span>
               </div>
 
-              <!-- Thêm ảnh mới vào phòng đang sửa -->
+
               <div class="border-top pt-3">
                 <p class="small fw-bold text-dark-blue mb-2">Thêm ảnh mới:</p>
                 <label for="input-anh-sua" class="upload-zone d-flex flex-column align-items-center justify-content-center gap-2 rounded p-3 mb-2" style="cursor:pointer; border: 2px dashed #c4b5fd; background:#faf5ff;">
@@ -547,7 +547,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- MODAL TIỆN ÍCH -->
+
     <div v-if="hienThiModalTienIch" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 520px; width: 100%;">
         <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">

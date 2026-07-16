@@ -558,3 +558,238 @@
 .modal-fade-leave-to .modal-box {
   transform: translateY(-20px) scale(.97);
 }
+
+.btn-cotenants {
+  flex: 1;
+  background: linear-gradient(135deg, #0891b2, #06b6d4);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-cotenants:hover {
+  background: linear-gradient(135deg, #0e7490, #0891b2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(8, 145, 178, .35);
+}
+
+.khach-hang-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 23, 42, .6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.khach-hang-modal {
+  background: #fff;
+  padding: 0;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 700px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .25);
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.khach-hang-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #0e7490, #06b6d4);
+  color: #fff;
+}
+
+.khach-hang-title {
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  font-size: 16px;
+}
+
+.khach-hang-close {
+  background: rgba(255, 255, 255, .15);
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  transition: all .2s;
+}
+
+.khach-hang-close:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.khach-hang-table-wrapper {
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 20px 24px 0;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.khach-hang-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.khach-hang-table th {
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-bottom: 2px solid #e2e8f0;
+  color: #64748b;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.khach-hang-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+  color: #374151;
+}
+
+.khach-hang-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.khach-hang-table tbody tr:hover {
+  background: #fafbff;
+}
+
+.khach-hang-empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 24px 14px !important;
+  font-size: 13px;
+}
+
+.khach-hang-fw-bold {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.khach-hang-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all .2s;
+}
+
+.khach-hang-btn-delete:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.khach-hang-form {
+  padding: 20px 24px 24px;
+  border-top: 1px solid #f1f5f9;
+  margin-top: 20px;
+}
+
+.khach-hang-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.khach-hang-col-4 {
+  flex: 0 0 calc(35% - 8px);
+}
+
+.khach-hang-col-3 {
+  flex: 0 0 calc(22% - 8px);
+}
+
+.khach-hang-col-2 {
+  flex: 0 0 calc(21% - 8px);
+}
+
+.khach-hang-flex-end {
+  display: flex;
+  align-items: flex-end;
+}
+
+.khach-hang-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.khach-hang-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  font-size: 13px;
+  color: #1e293b;
+  box-sizing: border-box;
+  transition: border-color .2s;
+}
+
+.khach-hang-input:focus {
+  border-color: #0891b2;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, .12);
+}
+
+.khach-hang-btn-add {
+  background: linear-gradient(135deg, #0891b2, #06b6d4);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(8, 145, 178, .3);
+}
+
+.khach-hang-btn-add:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(8, 145, 178, .4);
+}
+
+.text-end {
+  text-align: right;
+}
