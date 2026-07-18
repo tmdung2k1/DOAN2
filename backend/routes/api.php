@@ -18,6 +18,9 @@ use App\Http\Controllers\Api\KhachHangController;
 
 Route::get('/phong-trong', [TrangChuController::class, 'danhSachPhong']);
 
+// Khách vãng lai đặt phòng (không cần đăng nhập)
+Route::post('/dat-phong', [DatPhongController::class, 'store']);
+
 Route::post('/dang-nhap', [XacThucController::class, 'dangNhap']);
 
 Route::middleware('auth:sanctum')

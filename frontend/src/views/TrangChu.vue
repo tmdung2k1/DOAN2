@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import logoNhaTro from "../assets/images/logo_nha_tro.png";
 import heroRoom from "../assets/images/hero_room.png";
 import phong1 from "../assets/images/phong_1.png";
@@ -13,8 +13,8 @@ const dangTai = ref(true);
 const navScrolled = ref(false);
 const mobileMenuOpen = ref(false);
 
-const timSoPhong = ref("");
 const timGiaMax = ref("");
+const timDienTichMax = ref("");
 
 const anhPhongMap = [phong1, phong2, phong3, phong4, phong5];
 const layAnhPhong = (id) => anhPhongMap[(id || 0) % anhPhongMap.length];
@@ -45,18 +45,20 @@ const layDanhSachPhong = async () => {
     console.error("Lỗi kết nối API:", error);
   } finally {
     dangTai.value = false;
+    // Re-observe animations cho các element mới render sau khi data load xong
+    nextTick(() => setTimeout(observeAnimations, 100));
   }
 };
 
 const danhSachPhongDaLoc = computed(() => {
   return danhSachPhong.value.filter((phong) => {
-    const khopSoPhong = phong.so_phong
-      .toLowerCase()
-      .includes(timSoPhong.value.toLowerCase());
     const khopGia = timGiaMax.value
       ? parseFloat(phong.gia_thue) <= parseFloat(timGiaMax.value)
       : true;
-    return khopSoPhong && khopGia;
+    const khopDienTich = timDienTichMax.value
+      ? parseFloat(phong.dien_tich) <= parseFloat(timDienTichMax.value)
+      : true;
+    return khopGia && khopDienTich;
   });
 });
 
@@ -92,7 +94,81 @@ const scrollToFeatured = () => {
   document.getElementById("noi-bat")?.scrollIntoView({ behavior: "smooth" });
 };
 
+// === Đặt phòng ===
+const showBookingModal = ref(false);
+const bookingSuccess = ref(false);
+const bookingMaDatPhong = ref("");
+const bookingLoading = ref(false);
+const bookingError = ref("");
+const selectedPhong = ref(null);
 
+const bookingForm = ref({
+  ho_ten: "",
+  so_dien_thoai: "",
+  email: "",
+  ngay_du_kien_den: "",
+  ghi_chu: "",
+});
+
+const moModalDatPhong = (phong) => {
+  selectedPhong.value = phong;
+  bookingForm.value = { ho_ten: "", so_dien_thoai: "", email: "", ngay_du_kien_den: "", ghi_chu: "" };
+  bookingError.value = "";
+  bookingSuccess.value = false;
+  bookingMaDatPhong.value = "";
+  showBookingModal.value = true;
+  document.body.style.overflow = "hidden";
+};
+
+const dongModal = () => {
+  showBookingModal.value = false;
+  document.body.style.overflow = "";
+};
+
+const guiDatPhong = async () => {
+  bookingError.value = "";
+
+  if (!bookingForm.value.ho_ten.trim()) {
+    bookingError.value = "Vui lòng nhập họ tên.";
+    return;
+  }
+  if (!bookingForm.value.so_dien_thoai.trim()) {
+    bookingError.value = "Vui lòng nhập số điện thoại.";
+    return;
+  }
+  if (!bookingForm.value.ngay_du_kien_den) {
+    bookingError.value = "Vui lòng chọn ngày dự kiến đến.";
+    return;
+  }
+
+  bookingLoading.value = true;
+  try {
+    const res = await fetch("http://127.0.0.1:8000/api/dat-phong", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        phong_id: selectedPhong.value.id,
+        ...bookingForm.value,
+      }),
+    });
+    const result = await res.json();
+    if (result.status === "success") {
+      bookingSuccess.value = true;
+      bookingMaDatPhong.value = result.ma_dat_phong;
+    } else {
+      bookingError.value = result.message || "Có lỗi xảy ra, vui lòng thử lại.";
+    }
+  } catch (err) {
+    bookingError.value = "Không thể kết nối đến máy chủ. Vui lòng thử lại sau.";
+  } finally {
+    bookingLoading.value = false;
+  }
+};
+
+const ngayHomNay = computed(() => {
+  const d = new Date();
+  return d.toISOString().split("T")[0];
+});
 
 onMounted(() => {
   layDanhSachPhong();
@@ -186,18 +262,6 @@ const getRoomTag = (index) => {
           <div class="lp-search-bar">
             <div class="lp-search-item">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              <input
-                v-model="timSoPhong"
-                type="text"
-                placeholder="Số phòng..."
-              />
-            </div>
-            <div class="lp-search-divider"></div>
-            <div class="lp-search-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                 <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
               </svg>
@@ -206,6 +270,19 @@ const getRoomTag = (index) => {
                 <option value="2000000">Dưới 2 triệu</option>
                 <option value="3000000">Dưới 3 triệu</option>
                 <option value="4000000">Dưới 4 triệu</option>
+              </select>
+            </div>
+            <div class="lp-search-divider"></div>
+            <div class="lp-search-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+              </svg>
+              <select v-model="timDienTichMax">
+                <option value="">Mọi diện tích</option>
+                <option value="15">Dưới 15 m²</option>
+                <option value="20">Dưới 20 m²</option>
+                <option value="25">Dưới 25 m²</option>
+                <option value="30">Dưới 30 m²</option>
               </select>
             </div>
             <button class="lp-search-btn" @click="scrollToRooms">Tìm ngay</button>
@@ -351,6 +428,15 @@ const getRoomTag = (index) => {
                   {{ phong.ten_loai }}
                 </span>
               </div>
+              <button class="lp-book-btn" @click="moModalDatPhong(phong)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <line x1="20" y1="8" x2="20" y2="14" />
+                  <line x1="23" y1="11" x2="17" y2="11" />
+                </svg>
+                Đặt phòng
+              </button>
             </div>
           </div>
         </div>
@@ -383,6 +469,7 @@ const getRoomTag = (index) => {
                 </svg>
                 Nhà trọ TMD
               </div>
+              <button class="lp-featured-book-btn" @click="moModalDatPhong(phong)">Đặt phòng ngay</button>
             </div>
           </div>
         </div>
@@ -492,6 +579,93 @@ const getRoomTag = (index) => {
         © {{ new Date().getFullYear() }} Hệ thống cho thuê nhà trọ TMD. All rights reserved.
       </div>
     </footer>
+
+    <!-- Modal Đặt Phòng -->
+    <Teleport to="body">
+      <div v-if="showBookingModal" class="booking-overlay" @click.self="dongModal">
+        <div class="booking-modal" :class="{ 'booking-modal-success': bookingSuccess }">
+          <!-- Header -->
+          <div class="booking-modal-header">
+            <h3 v-if="!bookingSuccess">Đặt phòng</h3>
+            <h3 v-else>Thành công!</h3>
+            <button class="booking-close-btn" @click="dongModal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Nội dung thành công -->
+          <div v-if="bookingSuccess" class="booking-success">
+            <div class="booking-success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="48" height="48">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <p class="booking-success-title">Đặt phòng thành công!</p>
+            <p class="booking-success-desc">
+              Mã đặt phòng của bạn là: <strong>{{ bookingMaDatPhong }}</strong>
+            </p>
+            <p class="booking-success-note">
+              Chúng tôi sẽ liên hệ qua số điện thoại bạn đã cung cấp để xác nhận trong thời gian sớm nhất.
+            </p>
+            <button class="booking-done-btn" @click="dongModal">Đóng</button>
+          </div>
+
+          <!-- Form đặt phòng -->
+          <div v-else class="booking-body">
+            <!-- Thông tin phòng -->
+            <div class="booking-room-info" v-if="selectedPhong">
+              <img :src="layAnhPhong(selectedPhong.id)" :alt="'Phòng ' + selectedPhong.so_phong" />
+              <div class="booking-room-details">
+                <div class="booking-room-name">Phòng {{ selectedPhong.so_phong }} - {{ selectedPhong.ten_loai }}</div>
+                <div class="booking-room-price">{{ dinhDangTienDay(selectedPhong.gia_thue) }}/tháng</div>
+                <div class="booking-room-area">{{ selectedPhong.dien_tich }} m²</div>
+              </div>
+            </div>
+
+            <!-- Form nhập liệu -->
+            <div class="booking-form">
+              <div class="booking-field">
+                <label for="booking-name">Họ và tên <span class="required">*</span></label>
+                <input id="booking-name" v-model="bookingForm.ho_ten" type="text" placeholder="Nhập họ tên đầy đủ" />
+              </div>
+              <div class="booking-field">
+                <label for="booking-phone">Số điện thoại <span class="required">*</span></label>
+                <input id="booking-phone" v-model="bookingForm.so_dien_thoai" type="tel" placeholder="VD: 0399049011" />
+              </div>
+              <div class="booking-field">
+                <label for="booking-email">Email <span class="optional">(không bắt buộc)</span></label>
+                <input id="booking-email" v-model="bookingForm.email" type="email" placeholder="email@example.com" />
+              </div>
+              <div class="booking-field">
+                <label for="booking-date">Ngày dự kiến đến <span class="required">*</span></label>
+                <input id="booking-date" v-model="bookingForm.ngay_du_kien_den" type="date" :min="ngayHomNay" />
+              </div>
+              <div class="booking-field">
+                <label for="booking-note">Ghi chú <span class="optional">(không bắt buộc)</span></label>
+                <textarea id="booking-note" v-model="bookingForm.ghi_chu" rows="3" placeholder="Yêu cầu thêm, thời gian liên hệ..."></textarea>
+              </div>
+
+              <div v-if="bookingError" class="booking-error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="15" y1="9" x2="9" y2="15" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
+                {{ bookingError }}
+              </div>
+
+              <button class="booking-submit-btn" @click="guiDatPhong" :disabled="bookingLoading">
+                <span v-if="bookingLoading" class="booking-spinner"></span>
+                <span v-else>Gửi yêu cầu đặt phòng</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
