@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\TaiKhoan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class TaiKhoanSeeder extends Seeder
 {
@@ -14,8 +15,12 @@ class TaiKhoanSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         // Xóa dữ liệu cũ
         TaiKhoan::truncate();
+
+        Schema::enableForeignKeyConstraints();
 
         // Tạo tài khoản admin
         TaiKhoan::create([

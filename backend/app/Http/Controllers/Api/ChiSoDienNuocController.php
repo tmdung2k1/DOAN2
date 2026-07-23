@@ -13,7 +13,7 @@ class ChiSoDienNuocController extends Controller
     public function index()
     {
         $danhSach = DB::table('chi_so_dien_nuoc')
-            ->join('phong', 'chi_so_dien_nuoc.phong_id', '=', 'phong.id')
+            ->join('phong', 'chi_so_dien_nuoc.Ma_Phong', '=', 'phong.Ma_Phong')
             ->select('chi_so_dien_nuoc.*', 'phong.so_phong')
             ->orderBy('chi_so_dien_nuoc.thang_ghi_nhan', 'desc')
             ->get();
@@ -27,14 +27,14 @@ class ChiSoDienNuocController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'phong_id'       => 'required|integer|exists:phong,id',
+            'Ma_Phong'       => 'required|integer|exists:phong,Ma_Phong',
             'thang_ghi_nhan' => 'required|date',
             'loai_chi_so'    => 'required|in:dien,nuoc',
             'chi_so_cu'      => 'required|numeric|min:0',
             'chi_so_moi'     => 'required|numeric|gte:chi_so_cu',
         ], [
-            'phong_id.required'       => 'Vui lòng chọn phòng.',
-            'phong_id.exists'         => 'Phòng không tồn tại.',
+            'Ma_Phong.required'       => 'Vui lòng chọn phòng.',
+            'Ma_Phong.exists'         => 'Phòng không tồn tại.',
             'thang_ghi_nhan.required' => 'Vui lòng chọn ngày ghi nhận.',
             'thang_ghi_nhan.date'     => 'Ngày ghi nhận không hợp lệ.',
             'loai_chi_so.required'    => 'Vui lòng chọn loại dịch vụ.',
@@ -57,7 +57,7 @@ class ChiSoDienNuocController extends Controller
         $donGia = $request->loai_chi_so === 'dien' ? $caiDat->gia_dien : $caiDat->gia_nuoc;
 
         $chiSo = ChiSoDienNuoc::create([
-            'phong_id'       => $validated['phong_id'],
+            'Ma_Phong'       => $validated['Ma_Phong'],
             'thang_ghi_nhan' => $validated['thang_ghi_nhan'],
             'loai_chi_so'    => $validated['loai_chi_so'],
             'chi_so_cu'      => $validated['chi_so_cu'],

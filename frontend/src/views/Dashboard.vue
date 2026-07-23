@@ -127,7 +127,7 @@ const toggleSidebar = () => {
       <div class="px-4 pb-4">
         <QuanLyPhong v-if="tabHienTai === 'phong-tro'" />
         <QuanLyLoaiPhong v-else-if="tabHienTai === 'loai-phong'" />
-        <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" /> 
+        <QuanLyDatPhong v-else-if="tabHienTai === 'dat-phong'" @chuyenTabHopDong="tabHienTai = $event" /> 
         <QuanLyHopDong v-else-if="tabHienTai === 'hop-dong'" />
         <QuanLyTienIch v-else-if="tabHienTai === 'tien-ich'" />
         <QuanLyDienNuoc v-else-if="tabHienTai === 'dien-nuoc'" />

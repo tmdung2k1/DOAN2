@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tien_ich_phong', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('phong_id')->constrained('phong')->onDelete('cascade');
-            $table->foreignId('tien_ich_id')->constrained('tien_ich')->onDelete('cascade');
+            $table->id('Ma_TienIchPhong');
+            $table->unsignedBigInteger('Ma_Phong');
+            $table->foreign('Ma_Phong')->references('Ma_Phong')->on('phong')->onDelete('cascade');
+            $table->unsignedBigInteger('Ma_TienIch');
+            $table->foreign('Ma_TienIch')->references('Ma_TienIch')->on('tien_ich')->onDelete('cascade');
             $table->timestamps();
         });
     }

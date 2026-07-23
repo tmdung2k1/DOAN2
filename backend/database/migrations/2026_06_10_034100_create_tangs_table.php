@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tang', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('nha_tro_id')->constrained('nha_tro')->onDelete('cascade');
+            $table->id('Ma_Tang');
+            $table->unsignedBigInteger('Ma_NhaTro');
+            $table->foreign('Ma_NhaTro')->references('Ma_NhaTro')->on('nha_tro')->onDelete('cascade');
             $table->unsignedTinyInteger('so_tang');
             $table->string('ten_tang', 50)->nullable();
             $table->timestamps();

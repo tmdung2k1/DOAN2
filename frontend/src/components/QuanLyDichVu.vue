@@ -31,7 +31,7 @@ const moModalThem = () => {
 
 const moModalSua = (dv) => {
   dangSua.value = true
-  suaId.value = dv.id
+  suaId.value = dv.Ma_DichVu
   form.value = { ten_dich_vu: dv.ten_dich_vu, don_gia: dv.don_gia }
   hienThiModal.value = true
 }
@@ -96,7 +96,7 @@ onMounted(() => layDanhSach())
     </div>
 
     <div v-else class="dv-list">
-      <div v-for="dv in danhSach" :key="dv.id" class="dv-card">
+      <div v-for="dv in danhSach" :key="dv.Ma_DichVu" class="dv-card">
         <div class="dv-card-icon">⚙️</div>
         <div class="dv-card-info">
           <div class="dv-card-name">{{ dv.ten_dich_vu }}</div>
@@ -105,7 +105,7 @@ onMounted(() => layDanhSach())
         <div class="dv-card-lbl">/ tháng</div>
         <div class="dv-card-actions">
           <button @click="moModalSua(dv)" class="dv-btn-edit" title="Sửa">✏️</button>
-          <button @click="xoa(dv.id)" class="dv-btn-del" title="Xóa">🗑️</button>
+          <button @click="xoa(dv.Ma_DichVu)" class="dv-btn-del" title="Xóa">🗑️</button>
         </div>
       </div>
     </div>

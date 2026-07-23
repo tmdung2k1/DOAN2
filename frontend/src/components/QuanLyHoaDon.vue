@@ -43,7 +43,7 @@ const inHoaDon = () => inHoaDonUtil(thongTinHoaDonDangXem.value, chiTietHoaDonDa
 
 const hienThiModal = ref(false)
 const hopDongDuocChon = ref(null)
-const formHoaDon = ref({ hop_dong_id: '', thang_thanh_toan: '', han_chot: '', chi_tiet: [] })
+const formHoaDon = ref({ Ma_HopDong: '', thang_thanh_toan: '', han_chot: '', chi_tiet: [] })
 const cacKhoanThu = ref([])
 
 const hienThongBao = (loai, noi_dung) => {
@@ -85,7 +85,7 @@ const moModalThem = () => {
   chiSoPhong.value = { dien: null, nuoc: null }
   cacKhoanThu.value = []
   formHoaDon.value = {
-    hop_dong_id: '',
+    Ma_HopDong: '',
     thang_thanh_toan: homNay,
     han_chot: hanChot.toISOString().split('T')[0],
     chi_tiet: []
@@ -174,7 +174,7 @@ const xayDungKhoanThu = () => {
 
   danhSachDichVu.value.forEach((dv, idx) => {
     ds.push({
-      loai_phi: `dv_${dv.id}`,
+      loai_phi: `dv_${dv.Ma_DichVu}`,
       icon: ICONS[idx % ICONS.length],
       label: dv.ten_dich_vu,
       mau:   MAUS[idx % MAUS.length],
@@ -190,10 +190,10 @@ const xayDungKhoanThu = () => {
 }
 
 const chonHopDong = async () => {
-  const hd = danhSachHopDong.value.find(h => h.id == formHoaDon.value.hop_dong_id)
+  const hd = danhSachHopDong.value.find(h => h.Ma_HopDong == formHoaDon.value.Ma_HopDong)
   hopDongDuocChon.value = hd || null
   if (!hd) { cacKhoanThu.value = []; return }
-  await layChiSoPhong(hd.phong_id)
+  await layChiSoPhong(hd.Ma_Phong)
   xayDungKhoanThu()
 }
 
@@ -202,7 +202,7 @@ const tongTien = computed(() =>
 )
 
 const luuHoaDon = async () => {
-  if (!formHoaDon.value.hop_dong_id) {
+  if (!formHoaDon.value.Ma_HopDong) {
     hienThongBao('error', 'Vui lòng chọn phòng / hợp đồng!')
     return
   }
@@ -320,7 +320,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
           </tr>
         </thead>
         <tbody>
-          <tr v-for="hd in danhSachHoaDon" :key="hd.id" :class="['hd-row', hd.trang_thai]">
+          <tr v-for="hd in danhSachHoaDon" :key="hd.Ma_HoaDon" :class="['hd-row', hd.trang_thai]">
             <td><span class="ma-hd">{{ hd.ma_hoa_don }}</span></td>
             <td>
               <div class="phong-name">🏠 Phòng {{ hd.so_phong }}</div>
@@ -336,8 +336,8 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
             </td>
             <td>
               <div class="action-btns">
-                <button @click="xemChiTiet(hd.id)" class="btn-xem">🔍 Xem</button>
-                <button v-if="hd.trang_thai === 'chua_thanh_toan'" @click="xacNhanThuTien(hd.id)" class="btn-thu">✔ Đã nhận tiền</button>
+                <button @click="xemChiTiet(hd.Ma_HoaDon)" class="btn-xem">🔍 Xem</button>
+                <button v-if="hd.trang_thai === 'chua_thanh_toan'" @click="xacNhanThuTien(hd.Ma_HoaDon)" class="btn-thu">✔ Đã nhận tiền</button>
               </div>
             </td>
           </tr>
@@ -357,9 +357,9 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
             <div class="form-grid-3">
               <div class="form-group">
                 <label>Phòng / Hợp đồng <span class="required">*</span></label>
-                <select v-model="formHoaDon.hop_dong_id" @change="chonHopDong" class="form-ctrl" required>
+                <select v-model="formHoaDon.Ma_HopDong" @change="chonHopDong" class="form-ctrl" required>
                   <option value="" disabled>— Chọn phòng —</option>
-                  <option v-for="hd in danhSachHopDong" :key="hd.id" :value="hd.id">
+                  <option v-for="hd in danhSachHopDong" :key="hd.Ma_HopDong" :value="hd.Ma_HopDong">
                     🏠 Phòng {{ hd.so_phong }}  |  {{ hd.ho_ten }}
                   </option>
                 </select>
@@ -498,7 +498,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="ct in chiTietHoaDonDangXem" :key="ct.id">
+                <tr v-for="ct in chiTietHoaDonDangXem" :key="ct.Ma_ChiTietHoaDon">
                   <td><span class="loai-phi-badge">{{ dichLoaiPhi(ct.loai_phi) }}</span></td>
                   <td class="text-center">{{ ct.so_luong }}</td>
                   <td class="text-right">{{ fmt(ct.don_gia) }}</td>
@@ -520,7 +520,7 @@ onMounted(() => { layDanhSachHoaDon(); layDuLieuForm() })
               <button @click="inHoaDon" class="btn-print-footer">🖨️ In hóa đơn</button>
               <button
                 v-if="thongTinHoaDonDangXem && thongTinHoaDonDangXem.trang_thai === 'chua_thanh_toan'"
-                @click="xacNhanThuTien(thongTinHoaDonDangXem.id); hienThiModalChiTiet = false"
+                @click="xacNhanThuTien(thongTinHoaDonDangXem.Ma_HoaDon); hienThiModalChiTiet = false"
                 class="btn-submit"
               >✅ Xác nhận đã thu tiền</button>
             </div>

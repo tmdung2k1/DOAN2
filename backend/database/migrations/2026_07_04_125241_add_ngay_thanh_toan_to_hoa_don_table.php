@@ -1,28 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::table('hoa_don', function (Blueprint $table) {
-            $table->date('ngay_thanh_toan')->nullable()->after('han_chot');
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('hoa_don', function (Blueprint $table) {
-            $table->dropColumn('ngay_thanh_toan');
-        });
-    }
+    // No-op: đã gộp ngay_thanh_toan vào migration gốc create_hoa_dons
+    public function up(): void {}
+    public function down(): void {}
 };

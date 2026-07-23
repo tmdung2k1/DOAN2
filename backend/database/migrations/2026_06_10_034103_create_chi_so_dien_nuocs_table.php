@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chi_so_dien_nuoc', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('phong_id')->constrained('phong');
+            $table->id('Ma_ChiSoDienNuoc');
+            $table->unsignedBigInteger('Ma_Phong');
+            $table->foreign('Ma_Phong')->references('Ma_Phong')->on('phong');
             $table->date('thang_ghi_nhan'); // Lưu ngày đầu tháng, ví dụ: 2026-06-01
             $table->enum('loai_chi_so', ['dien', 'nuoc']);
             $table->decimal('chi_so_cu', 10, 2)->default(0);

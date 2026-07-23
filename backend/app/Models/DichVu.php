@@ -9,5 +9,6 @@ class DichVu extends Model
 {
     use HasFactory;
     protected $table = 'dich_vu';
+    protected $primaryKey = 'Ma_DichVu';
     protected $guarded = [];
 }

@@ -8,5 +8,6 @@ class CaiDat extends Model
 {
     use HasFactory;
     protected $table = 'cai_dat';
+    protected $primaryKey = 'Ma_CaiDat';
     protected $guarded = [];
 }

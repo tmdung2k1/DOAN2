@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('thong_bao', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('tai_khoan_id')->constrained('tai_khoan')->onDelete('cascade');
+            $table->id('Ma_ThongBao');
+            $table->unsignedBigInteger('Ma_TaiKhoan');
+            $table->foreign('Ma_TaiKhoan')->references('Ma_TaiKhoan')->on('tai_khoans')->onDelete('cascade');
             $table->string('tieu_de', 200);
             $table->text('noi_dung');
             $table->boolean('da_doc')->default(0);

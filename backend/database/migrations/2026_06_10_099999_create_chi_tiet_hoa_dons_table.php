@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chi_tiet_hoa_don', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('hoa_don_id')->constrained('hoa_don')->onDelete('cascade');
+            $table->id('Ma_ChiTietHoaDon');
+            $table->unsignedBigInteger('Ma_HoaDon');
+            $table->foreign('Ma_HoaDon')->references('Ma_HoaDon')->on('hoa_don')->onDelete('cascade');
             $table->enum('loai_phi', ['tien_phong', 'tien_dien', 'tien_nuoc', 'rac', 'wifi', 'khac']);
             $table->decimal('so_luong', 10, 2)->default(1);
             $table->decimal('don_gia', 12, 2);

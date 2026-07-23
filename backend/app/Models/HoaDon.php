@@ -9,5 +9,6 @@ class HoaDon extends Model
 {
     use HasFactory;
     protected $table = 'hoa_don';
+    protected $primaryKey = 'Ma_HoaDon';
     protected $guarded = [];
 }

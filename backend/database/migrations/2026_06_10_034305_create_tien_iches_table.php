@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tien_ich', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_TienIch');
             $table->string('ten_tien_ich', 100)->unique();
             $table->enum('loai', ['co_ban', 'noi_that', 'an_ninh'])->default('co_ban');
             $table->timestamps();

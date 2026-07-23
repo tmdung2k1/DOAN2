@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cai_dat', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_CaiDat');
             $table->integer('gia_dien')->default(3500); // Giá điện (VNĐ/kWh)
             $table->integer('gia_nuoc')->default(15000); // Giá nước (VNĐ/khối)
             $table->timestamps();

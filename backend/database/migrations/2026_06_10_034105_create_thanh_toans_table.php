@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('thanh_toan', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_ThanhToan');
             $table->string('ma_giao_dich', 50)->unique();
-            $table->foreignId('hoa_don_id')->nullable()->constrained('hoa_don');
-            $table->foreignId('dat_phong_id')->nullable()->constrained('dat_phong');
+            $table->unsignedBigInteger('Ma_HoaDon')->nullable();
+            $table->foreign('Ma_HoaDon')->references('Ma_HoaDon')->on('hoa_don');
+            $table->unsignedBigInteger('Ma_DatPhong')->nullable();
+            $table->foreign('Ma_DatPhong')->references('Ma_DatPhong')->on('dat_phong');
             $table->decimal('so_tien', 14, 2);
             $table->enum('phuong_thuc', ['tien_mat', 'chuyen_khoan', 'paypal']);
             $table->string('paypal_order_id', 100)->nullable();

@@ -21,7 +21,7 @@
 
 <template>
    <div class="card h-100 shadow-sm room-card">
-    <img :src="layAnhPhong(phong.id)" class="card-img-top room-img" alt="Ảnh phòng trọ" style="height: 220px; object-fit: cover;">
+    <img :src="layAnhPhong(phong.Ma_Phong)" class="card-img-top room-img" alt="Ảnh phòng trọ" style="height: 220px; object-fit: cover;">
     
     <div class="card-body p-4">
       <div class="d-flex justify-content-between align-items-center mb-2">

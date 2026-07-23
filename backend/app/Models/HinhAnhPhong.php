@@ -9,5 +9,6 @@ class HinhAnhPhong extends Model
 {
     use HasFactory;
     protected $table = 'hinh_anh_phong';
+    protected $primaryKey = 'Ma_HinhAnhPhong';
     protected $guarded = [];
 }

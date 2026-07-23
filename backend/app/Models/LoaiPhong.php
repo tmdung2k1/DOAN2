@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LoaiPhong extends Model
 {
     use HasFactory;
-    protected $table = 'loai_phong'; 
+    protected $table = 'loai_phong';
+    protected $primaryKey = 'Ma_LoaiPhong';
     protected $guarded = []; 
 }

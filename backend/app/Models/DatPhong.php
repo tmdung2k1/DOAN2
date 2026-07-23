@@ -9,10 +9,11 @@ class DatPhong extends Model
 {
     use HasFactory;
     protected $table = 'dat_phong';
+    protected $primaryKey = 'Ma_DatPhong';
     protected $guarded = [];
 
     public function phong()
     {
-        return $this->belongsTo(Phong::class, 'phong_id');
+        return $this->belongsTo(Phong::class, 'Ma_Phong', 'Ma_Phong');
     }
 }

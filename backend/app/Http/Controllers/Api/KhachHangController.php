@@ -10,7 +10,7 @@ class KhachHangController extends Controller
 {
     public function layTheoHopDong($hop_dong_id)
     {
-        $danhSach = KhachHang::where('hop_dong_id', $hop_dong_id)
+        $danhSach = KhachHang::where('Ma_HopDong', $hop_dong_id)
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -20,7 +20,7 @@ class KhachHangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'hop_dong_id' => 'required|integer|exists:hop_dong,id',
+            'Ma_HopDong' => 'required|integer|exists:hop_dong,Ma_HopDong',
             'ho_ten' => 'required|string|max:100',
             'cccd' => 'nullable|string|max:20',
             'so_dien_thoai' => 'nullable|string|max:20'

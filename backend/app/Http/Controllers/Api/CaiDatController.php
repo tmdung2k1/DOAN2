@@ -27,9 +27,9 @@ class CaiDatController extends Controller
         $caiDat = CaiDat::first();
 
         if (!$caiDat) {
-            CaiDat::create($request->except('id'));
+            CaiDat::create($request->except('Ma_CaiDat'));
         } else {
-            $caiDat->update($request->except('id'));
+            $caiDat->update($request->except('Ma_CaiDat'));
         }
 
         return response()->json([

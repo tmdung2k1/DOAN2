@@ -103,7 +103,7 @@ onMounted(() => layDanhSachTienIch())
           </tr>
         </thead>
         <tbody>
-          <tr v-for="ti in danhSachTienIch" :key="ti.id">
+          <tr v-for="ti in danhSachTienIch" :key="ti.Ma_TienIch">
             <td class="ps-4 fw-bold text-dark-blue">{{ ti.ten_tien_ich }}</td>
             <td>
               <span v-if="ti.loai === 'co_ban'" class="badge bg-secondary">Cơ Bản</span>
@@ -111,7 +111,7 @@ onMounted(() => layDanhSachTienIch())
               <span v-else-if="ti.loai === 'an_ninh'" class="badge bg-success">An Ninh</span>
             </td>
             <td class="text-end pe-4">
-              <button @click="xoaTienIch(ti.id)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
+              <button @click="xoaTienIch(ti.Ma_TienIch)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
             </td>
           </tr>
         </tbody>
@@ -151,4 +151,3 @@ onMounted(() => layDanhSachTienIch())
     </div>
   </div>
 </template>
-

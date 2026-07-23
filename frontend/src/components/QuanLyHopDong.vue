@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from 'vue'
 
 const danhSachPhong = ref([])
-const danhSachKhach = ref([])
 const danhSachHopDong = ref([])
 const dangTai = ref(true)
 const dangLuu = ref(false)
@@ -13,9 +12,15 @@ const loiForm = ref('')
 const thongBao = ref({ hien: false, loai: '', noi_dung: '' })
 
 const formHopDong = ref({
-  phong_id: '', khach_id: '',
-  ngay_bat_dau: '', ngay_ket_thuc: '',
-  gia_thue_hang_thang: '', tien_coc: '',
+  Ma_Phong: '',
+  ten_khach_hang: '',
+  so_dien_thoai: '',
+  cccd: '',
+  email: '',
+  ngay_bat_dau: '',
+  ngay_ket_thuc: '',
+  gia_thue_hang_thang: '',
+  tien_coc: '',
   ngay_thu_tien_hang_thang: 5
 })
 
@@ -44,36 +49,67 @@ const layDuLieuForm = async () => {
     const result = await res.json()
     if (result.status === 'success') {
       danhSachPhong.value = result.phongs
-      danhSachKhach.value = result.khachs
     }
   } catch (e) { console.error(e) }
 }
 
-const moModalThem = () => {
+const moModalThem = async (maPhongTuDong = null) => {
+  await layDuLieuForm()
   const homNay = new Date().toISOString().split('T')[0]
   formHopDong.value = {
-    phong_id: '', khach_id: '', ngay_bat_dau: homNay,
-    ngay_ket_thuc: '', gia_thue_hang_thang: '', tien_coc: '',
+    Ma_Phong: '',
+    ten_khach_hang: '',
+    so_dien_thoai: '',
+    cccd: '',
+    email: '',
+    ngay_bat_dau: homNay,
+    ngay_ket_thuc: '',
+    gia_thue_hang_thang: '',
+    tien_coc: '',
     ngay_thu_tien_hang_thang: 5
   }
   loiForm.value = ''
   hienThiModal.value = true
+
+  // Check if room was requested from DatPhong tab
+  const maPhongChon = maPhongTuDong || localStorage.getItem('chon_phong_hop_dong')
+  if (maPhongChon) {
+    localStorage.removeItem('chon_phong_hop_dong')
+    formHopDong.value.Ma_Phong = Number(maPhongChon)
+    onChonPhong()
+  }
 }
 
 const formatSoTien = (value) => {
+  if (!value) return ''
   const so = String(value).replace(/\D/g, '')
   return so.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 }
 const onNhapGiaThu  = (e) => { formHopDong.value.gia_thue_hang_thang = formatSoTien(e.target.value) }
 const onNhapTienCoc = (e) => { formHopDong.value.tien_coc = formatSoTien(e.target.value) }
 
-const tuDongDienGia = () => {
-  const p = danhSachPhong.value.find(p => p.id === formHopDong.value.phong_id)
-  if (p) {
-    formHopDong.value.gia_thue_hang_thang = formatSoTien(parseInt(p.gia_thue))
-    if (!formHopDong.value.tien_coc)
-      formHopDong.value.tien_coc = formatSoTien(parseInt(p.gia_thue))
+const onChonPhong = () => {
+  const p = danhSachPhong.value.find(p => p.Ma_Phong === formHopDong.value.Ma_Phong)
+  if (!p) return
+
+  formHopDong.value.gia_thue_hang_thang = formatSoTien(parseInt(p.gia_thue))
+
+  if (p.dat_coc_info) {
+    // Phòng ĐÃ ĐẶT CỌC -> Tự động điền đầy đủ thông tin khách đã cọc & thông tin đặt phòng
+    formHopDong.value.ten_khach_hang = p.dat_coc_info.ho_ten || ''
+    formHopDong.value.so_dien_thoai = p.dat_coc_info.so_dien_thoai || ''
+    formHopDong.value.email = p.dat_coc_info.email || ''
+    formHopDong.value.tien_coc = formatSoTien(parseInt(p.dat_coc_info.tien_coc || p.gia_coc || p.gia_thue))
+    
+    if (p.dat_coc_info.ngay_du_kien_den) {
+      formHopDong.value.ngay_bat_dau = p.dat_coc_info.ngay_du_kien_den
+    }
+  } else {
+    // Phòng TRỐNG -> Điền sẵn giá cọc niêm yết
+    formHopDong.value.tien_coc = formatSoTien(parseInt(p.gia_coc || p.gia_thue))
   }
+
+  tuDongNgayKetThuc()
 }
 
 const tuDongNgayKetThuc = () => {
@@ -93,14 +129,18 @@ const minNgayKetThuc = () => {
 
 const luuHopDong = async () => {
   loiForm.value = ''
-  if (!formHopDong.value.ngay_bat_dau || !formHopDong.value.ngay_ket_thuc) {
-    loiForm.value = 'Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc.'
+  if (!formHopDong.value.Ma_Phong) {
+    loiForm.value = 'Vui lòng chọn phòng thuê.'
     return
   }
-  const batDau = new Date(formHopDong.value.ngay_bat_dau)
-  const ketThuc = new Date(formHopDong.value.ngay_ket_thuc)
-  const min = new Date(batDau); min.setMonth(min.getMonth() + 1)
-  if (ketThuc < min) { loiForm.value = 'Thời hạn hợp đồng tối thiểu phải là 1 tháng.'; return }
+  if (!formHopDong.value.ten_khach_hang || !formHopDong.value.so_dien_thoai) {
+    loiForm.value = 'Vui lòng nhập đầy đủ tên và số điện thoại khách hàng.'
+    return
+  }
+  if (!formHopDong.value.ngay_bat_dau || !formHopDong.value.ngay_ket_thuc) {
+    loiForm.value = 'Vui lòng chọn ngày bắt đầu và kết thúc hợp đồng.'
+    return
+  }
 
   dangLuu.value = true
   try {
@@ -158,7 +198,6 @@ const taiFilePDF = async (id, ma) => {
 }
 
 const tongHieuLuc = computed(() => danhSachHopDong.value.filter(h => h.trang_thai === 'hieu_luc').length)
-
 const tongHetHan  = computed(() => danhSachHopDong.value.filter(h => h.trang_thai === 'het_han').length)
 
 const fmt    = (n) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(n)
@@ -167,14 +206,14 @@ const fmtNgay = (d) => new Date(d).toLocaleDateString('vi-VN')
 const hienThiModalKhachHang = ref(false)
 const danhSachKhachHang = ref([])
 const hopDongDangChonKhach = ref(null)
-const formKhachHang = ref({ hop_dong_id: '', ho_ten: '', cccd: '', so_dien_thoai: '' })
+const formKhachHang = ref({ Ma_HopDong: '', ho_ten: '', cccd: '', so_dien_thoai: '' })
 
 const moModalKhachHang = async (hopDong) => {
   hopDongDangChonKhach.value = hopDong
-  formKhachHang.value = { hop_dong_id: hopDong.id, ho_ten: '', cccd: '', so_dien_thoai: '' }
+  formKhachHang.value = { Ma_HopDong: hopDong.Ma_HopDong, ho_ten: '', cccd: '', so_dien_thoai: '' }
 
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/admin/hop-dong/${hopDong.id}/khach-hang`, {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/hop-dong/${hopDong.Ma_HopDong}/khach-hang`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const result = await res.json()
@@ -218,7 +257,13 @@ const xoaKhachHang = async (id, index) => {
   } catch (error) { alert('Lỗi kết nối!') }
 }
 
-onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
+onMounted(() => {
+  layDanhSachHopDong()
+  layDuLieuForm()
+  if (localStorage.getItem('chon_phong_hop_dong')) {
+    moModalThem()
+  }
+})
 </script>
 
 <template>
@@ -234,7 +279,7 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       <div>
         <h4 class="hd-title">📋 Quản Lý Hợp Đồng</h4>
       </div>
-      <button @click="moModalThem" class="btn-create">
+      <button @click="moModalThem()" class="btn-create">
         <span>＋</span> Tạo Hợp Đồng
       </button>
     </div>
@@ -268,7 +313,7 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
         <transition-group name="card-list" tag="div" class="cards-grid">
           <div
             v-for="hd in danhSachHopDong"
-            :key="hd.id"
+            :key="hd.Ma_HopDong"
             class="contract-card"
             :class="{
               'card-active':   hd.trang_thai === 'hieu_luc',
@@ -292,8 +337,8 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
 
             <div class="card-main">
               <div class="card-room">🏠 Phòng {{ hd.so_phong }}</div>
-              <div class="card-tenant">{{ hd.ten_khach_hang }}</div>
-              <div class="card-phone">{{ hd.so_dien_thoai }}</div>
+              <div class="card-tenant">👤 {{ hd.ten_khach_hang }}</div>
+              <div class="card-phone">📞 {{ hd.so_dien_thoai }}</div>
             </div>
 
             <div class="card-info">
@@ -319,12 +364,12 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
               <button @click="moModalKhachHang(hd)" class="btn-cotenants">
                 👥 Khách ở cùng
               </button>
-              <button @click="taiFilePDF(hd.id, hd.ma_hop_dong)" class="btn-pdf">
+              <button @click="taiFilePDF(hd.Ma_HopDong, hd.ma_hop_dong)" class="btn-pdf">
                 📄 Xuất PDF
               </button>
               <button
                 v-if="hd.trang_thai === 'hieu_luc'"
-                @click="huyHopDong(hd.id, hd.ma_hop_dong)"
+                @click="huyHopDong(hd.Ma_HopDong, hd.ma_hop_dong)"
                 class="btn-cancel-contract"
               >
                 Chấm dứt
@@ -335,72 +380,88 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       </div>
     </div>
 
+    <!-- Modal Tạo Hợp Đồng Thuê Phòng -->
     <transition name="modal-fade">
       <div v-if="hienThiModal" class="modal-bg" @click.self="hienThiModal = false">
-        <div class="modal-box" style="border: none; border-radius: 12px; overflow: hidden;">
+        <div class="modal-box" style="border: none; border-radius: 12px; overflow: hidden; max-width: 680px; width: 95%;">
 
           <div class="modal-hd" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-bottom: none; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; color: white;">
             <h5 class="modal-title text-white fw-bold m-0" style="font-size: 1.1rem;">📋 Tạo Hợp Đồng Thuê Phòng</h5>
             <button @click="hienThiModal = false" class="btn btn-sm btn-outline-light fw-bold">✕ Đóng</button>
           </div>
 
-          <div v-if="loiForm" class="err-box">⚠️ {{ loiForm }}</div>
+          <div v-if="loiForm" class="err-box" style="margin: 1rem 1.5rem 0; padding: 0.75rem 1rem; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; border-radius: 8px;">⚠️ {{ loiForm }}</div>
 
-          <form @submit.prevent="luuHopDong" class="modal-form">
+          <form @submit.prevent="luuHopDong" class="modal-form" style="padding: 1.5rem;">
 
+            <!-- Chọn Phòng Thuê / Phòng Đã Đặt Cọc -->
+            <div class="fg mb-3">
+              <label class="fw-bold text-dark-blue">Chọn Phòng Cần Lập Hợp Đồng <span class="req text-danger">*</span></label>
+              <select v-model.number="formHopDong.Ma_Phong" @change="onChonPhong" class="fc form-select custom-input" required>
+                <option value="" disabled>— Chọn phòng (Ưu tiên đề xuất phòng đã đặt cọc) —</option>
+                <option v-for="p in danhSachPhong" :key="p.Ma_Phong" :value="p.Ma_Phong">
+                  <template v-if="p.trang_thai === 'dat_truoc'">
+                    ⭐ [ĐÃ CỌC] Phòng {{ p.so_phong }} — Khách: {{ p.dat_coc_info?.ho_ten }} ({{ p.dat_coc_info?.so_dien_thoai }})
+                  </template>
+                  <template v-else>
+                    🏠 [TRỐNG] Phòng {{ p.so_phong }} — {{ Number(p.gia_thue).toLocaleString('vi-VN') }}đ/tháng
+                  </template>
+                </option>
+              </select>
+              <small class="text-muted mt-1 d-block">Khi chọn phòng đã cọc, thông tin khách hàng và ngày dự kiến sẽ tự động điền.</small>
+            </div>
 
-            <div class="form-row-2">
-              <div class="fg">
-                <label>Phòng trống <span class="req">*</span></label>
-                <select v-model.number="formHopDong.phong_id" @change="tuDongDienGia" class="fc" required>
-                  <option value="" disabled>— Chọn phòng —</option>
-                  <option v-for="p in danhSachPhong" :key="p.id" :value="p.id">
-                    Phòng {{ p.so_phong }} — {{ Number(p.gia_thue).toLocaleString('vi-VN') }}đ/tháng
-                  </option>
-                </select>
+            <!-- Thông Tin Khách Thuê Chính -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Họ và Tên Khách Thuê <span class="req text-danger">*</span></label>
+                <input v-model="formHopDong.ten_khach_hang" type="text" class="fc form-control custom-input" placeholder="VD: Nguyễn Văn A" required>
               </div>
-              <div class="fg">
-                <label>Khách hàng <span class="req">*</span></label>
-                <select v-model.number="formHopDong.khach_id" class="fc" required>
-                  <option value="" disabled>— Chọn khách —</option>
-                  <option v-for="k in danhSachKhach" :key="k.id" :value="k.id">
-                    {{ k.ho_ten }} — {{ k.so_dien_thoai }}
-                  </option>
-                </select>
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Số Điện Thoại <span class="req text-danger">*</span></label>
+                <input v-model="formHopDong.so_dien_thoai" type="text" class="fc form-control custom-input" placeholder="VD: 0987654321" required>
+              </div>
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Số CMND / CCCD</label>
+                <input v-model="formHopDong.cccd" type="text" class="fc form-control custom-input" placeholder="VD: 038099123456">
+              </div>
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Email Khách Thuê</label>
+                <input v-model="formHopDong.email" type="email" class="fc form-control custom-input" placeholder="email@example.com">
               </div>
             </div>
 
-
-            <div class="form-row-2">
-              <div class="fg">
-                <label>Ngày bắt đầu <span class="req">*</span></label>
-                <input v-model="formHopDong.ngay_bat_dau" @change="tuDongNgayKetThuc" type="date" class="fc" required>
+            <!-- Ngày Bắt Đầu & Ngày Kết Thúc -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Ngày Bắt Đầu Hợp Đồng <span class="req text-danger">*</span></label>
+                <input v-model="formHopDong.ngay_bat_dau" @change="tuDongNgayKetThuc" type="date" class="fc form-control custom-input" required>
               </div>
-              <div class="fg">
-                <label>Ngày kết thúc <span class="req">*</span></label>
-                <input v-model="formHopDong.ngay_ket_thuc" type="date" :min="minNgayKetThuc()" class="fc" required>
-              </div>
-            </div>
-
-
-            <div class="form-row-3">
-              <div class="fg">
-                <label>Giá thuê/tháng (đ) <span class="req">*</span></label>
-                <input :value="formHopDong.gia_thue_hang_thang" @input="onNhapGiaThu" type="text" inputmode="numeric" class="fc" placeholder="VD: 2.500.000" required>
-              </div>
-              <div class="fg">
-                <label>Tiền cọc (đ) <span class="req">*</span></label>
-                <input :value="formHopDong.tien_coc" @input="onNhapTienCoc" type="text" inputmode="numeric" class="fc" placeholder="VD: 2.500.000" required>
-              </div>
-              <div class="fg">
-                <label>Ngày thu tiền hàng tháng</label>
-                <input v-model="formHopDong.ngay_thu_tien_hang_thang" type="number" min="1" max="31" class="fc" required>
+              <div class="col-md-6">
+                <label class="fw-bold text-dark-blue">Ngày Kết Thúc <span class="req text-danger">*</span></label>
+                <input v-model="formHopDong.ngay_ket_thuc" type="date" :min="minNgayKetThuc()" class="fc form-control custom-input" required>
               </div>
             </div>
 
-            <div class="modal-footer">
-              <button type="button" @click="hienThiModal = false" class="btn-cancel">Hủy bỏ</button>
-              <button type="submit" class="btn-submit" :disabled="dangLuu">
+            <!-- Giá Thuê, Tiền Cọc & Ngày Thu Tiền -->
+            <div class="row g-3 mb-4">
+              <div class="col-md-4">
+                <label class="fw-bold text-dark-blue">Giá Thuê / Tháng (đ) <span class="req text-danger">*</span></label>
+                <input :value="formHopDong.gia_thue_hang_thang" @input="onNhapGiaThu" type="text" inputmode="numeric" class="fc form-control custom-input" placeholder="VD: 2.500.000" required>
+              </div>
+              <div class="col-md-4">
+                <label class="fw-bold text-dark-blue">Tiền Cọc (đ) <span class="req text-danger">*</span></label>
+                <input :value="formHopDong.tien_coc" @input="onNhapTienCoc" type="text" inputmode="numeric" class="fc form-control custom-input" placeholder="VD: 2.500.000" required>
+              </div>
+              <div class="col-md-4">
+                <label class="fw-bold text-dark-blue">Ngày Thu Tiền Hàng Tháng</label>
+                <input v-model="formHopDong.ngay_thu_tien_hang_thang" type="number" min="1" max="31" class="fc form-control custom-input" required>
+              </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-end gap-2 pt-3 border-top">
+              <button type="button" @click="hienThiModal = false" class="btn btn-light fw-bold px-4">Hủy bỏ</button>
+              <button type="submit" class="btn btn-purple fw-bold px-4" :disabled="dangLuu">
                 <span v-if="dangLuu">⏳ Đang lưu...</span>
                 <span v-else>✔ Tạo Hợp Đồng</span>
               </button>
@@ -410,6 +471,7 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
       </div>
     </transition>
 
+    <!-- Modal Quản Lý Người Ở Cùng -->
     <transition name="modal-fade">
       <div v-if="hienThiModalKhachHang" class="khach-hang-overlay" @click.self="hienThiModalKhachHang = false">
         <div class="khach-hang-modal">
@@ -432,12 +494,12 @@ onMounted(() => { layDanhSachHopDong(); layDuLieuForm() })
                 <tr v-if="danhSachKhachHang.length === 0">
                   <td colspan="4" class="khach-hang-empty">Chưa có khách ở ghép.</td>
                 </tr>
-                <tr v-for="(kh, index) in danhSachKhachHang" :key="kh.id">
+                <tr v-for="(kh, index) in danhSachKhachHang" :key="kh.Ma_KhachHang">
                   <td class="khach-hang-fw-bold">{{ kh.ho_ten }}</td>
                   <td>{{ kh.cccd || '---' }}</td>
                   <td>{{ kh.so_dien_thoai || '---' }}</td>
                   <td class="text-end">
-                    <button @click="xoaKhachHang(kh.id, index)" class="khach-hang-btn-delete">✕</button>
+                    <button @click="xoaKhachHang(kh.Ma_KhachHang, index)" class="khach-hang-btn-delete">✕</button>
                   </td>
                 </tr>
               </tbody>

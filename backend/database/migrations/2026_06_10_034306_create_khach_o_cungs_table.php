@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('khach_o_cung', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('hop_dong_id')->constrained('hop_dong')->onDelete('cascade');
+        // Tạo bảng khach_hang trực tiếp (gộp từ khach_o_cung + rename + add dia_chi)
+        Schema::create('khach_hang', function (Blueprint $table) {
+            $table->id('Ma_KhachHang');
+            $table->unsignedBigInteger('Ma_HopDong');
+            $table->foreign('Ma_HopDong')->references('Ma_HopDong')->on('hop_dong')->onDelete('cascade');
             $table->string('ho_ten', 100);
             $table->string('cccd', 20)->nullable();
             $table->string('so_dien_thoai', 20)->nullable();
+            $table->string('dia_chi', 255)->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('khach_o_cung');
+        Schema::dropIfExists('khach_hang');
     }
 };

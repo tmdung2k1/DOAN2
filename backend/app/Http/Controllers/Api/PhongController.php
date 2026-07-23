@@ -24,8 +24,8 @@ class PhongController extends Controller
             'gia_thue' => 'required|numeric|min:0',
             'gia_coc' => 'required|numeric|min:0',
             'dien_tich' => 'required|numeric|min:0',
-            'loai_phong_id' => 'required|exists:loai_phong,id',
-            'tang_id' => 'nullable|exists:tang,id',
+            'Ma_LoaiPhong' => 'required|exists:loai_phong,Ma_LoaiPhong',
+            'Ma_Tang' => 'nullable|exists:tang,Ma_Tang',
             'trang_thai' => 'nullable|in:trong,da_thue,dat_truoc,bao_tri',
         ], [
             'so_phong.required' => 'Vui lòng nhập số phòng.',
@@ -36,12 +36,12 @@ class PhongController extends Controller
             'gia_coc.numeric' => 'Tiền cọc phải là số.',
             'dien_tich.required' => 'Vui lòng nhập diện tích.',
             'dien_tich.numeric' => 'Diện tích phải là số.',
-            'loai_phong_id.required' => 'Vui lòng chọn loại phòng.',
-            'loai_phong_id.exists' => 'Loại phòng không hợp lệ.',
+            'Ma_LoaiPhong.required' => 'Vui lòng chọn loại phòng.',
+            'Ma_LoaiPhong.exists' => 'Loại phòng không hợp lệ.',
             'trang_thai.in' => 'Trạng thái phòng không hợp lệ.',
         ]);
 
-        $phong = Phong::create($request->except('id'));
+        $phong = Phong::create($request->except('Ma_Phong'));
 
         return response()->json([
             'status' => 'success',
@@ -58,12 +58,12 @@ class PhongController extends Controller
         }
 
         $request->validate([
-            'so_phong' => 'required|unique:phong,so_phong,' . $id,
+            'so_phong' => 'required|unique:phong,so_phong,' . $id . ',Ma_Phong',
             'gia_thue' => 'required|numeric|min:0',
             'gia_coc' => 'required|numeric|min:0',
             'dien_tich' => 'required|numeric|min:0',
-            'loai_phong_id' => 'required|exists:loai_phong,id',
-            'tang_id' => 'nullable|exists:tang,id',
+            'Ma_LoaiPhong' => 'required|exists:loai_phong,Ma_LoaiPhong',
+            'Ma_Tang' => 'nullable|exists:tang,Ma_Tang',
             'trang_thai' => 'nullable|in:trong,da_thue,dat_truoc,bao_tri',
         ], [
             'so_phong.required' => 'Vui lòng nhập số phòng.',
@@ -74,12 +74,12 @@ class PhongController extends Controller
             'gia_coc.numeric' => 'Tiền cọc phải là số.',
             'dien_tich.required' => 'Vui lòng nhập diện tích.',
             'dien_tich.numeric' => 'Diện tích phải là số.',
-            'loai_phong_id.required' => 'Vui lòng chọn loại phòng.',
-            'loai_phong_id.exists' => 'Loại phòng không hợp lệ.',
+            'Ma_LoaiPhong.required' => 'Vui lòng chọn loại phòng.',
+            'Ma_LoaiPhong.exists' => 'Loại phòng không hợp lệ.',
             'trang_thai.in' => 'Trạng thái phòng không hợp lệ.',
         ]);
 
-        $phong->update($request->except('id'));
+        $phong->update($request->except('Ma_Phong'));
 
         return response()->json([
             'status' => 'success',
@@ -105,8 +105,8 @@ class PhongController extends Controller
     public function layTienIch($id)
     {
         $tienIchIds = \Illuminate\Support\Facades\DB::table('tien_ich_phong')
-            ->where('phong_id', $id)
-            ->pluck('tien_ich_id');
+            ->where('Ma_Phong', $id)
+            ->pluck('Ma_TienIch');
             
         return response()->json(['status' => 'success', 'data' => $tienIchIds]);
     }
@@ -117,13 +117,13 @@ class PhongController extends Controller
             'tien_ich_ids' => 'array'
         ]);
 
-        \Illuminate\Support\Facades\DB::table('tien_ich_phong')->where('phong_id', $id)->delete();
+        \Illuminate\Support\Facades\DB::table('tien_ich_phong')->where('Ma_Phong', $id)->delete();
 
         $duLieuMoi = [];
         foreach ($request->tien_ich_ids as $ti_id) {
             $duLieuMoi[] = [
-                'phong_id' => $id,
-                'tien_ich_id' => $ti_id,
+                'Ma_Phong' => $id,
+                'Ma_TienIch' => $ti_id,
                 'created_at' => now(),
                 'updated_at' => now()
             ];

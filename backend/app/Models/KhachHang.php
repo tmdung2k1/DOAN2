@@ -10,6 +10,7 @@ class KhachHang extends Model
     use HasFactory;
 
     protected $table = 'khach_hang';
+    protected $primaryKey = 'Ma_KhachHang';
 
     protected $guarded = [];
 }

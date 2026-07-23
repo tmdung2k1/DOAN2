@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tin_nhan_ai', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('tai_khoan_id')->constrained('tai_khoan')->onDelete('cascade');
+            $table->id('Ma_TinNhanAI');
+            $table->unsignedBigInteger('Ma_TaiKhoan');
+            $table->foreign('Ma_TaiKhoan')->references('Ma_TaiKhoan')->on('tai_khoans')->onDelete('cascade');
             $table->enum('vai_tro', ['user', 'ai']);
             $table->text('noi_dung');
             $table->timestamps();

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 
+const emit = defineEmits(['chuyenTabHopDong'])
+
 const danhSachYeuCau = ref([])
 const dangTai = ref(true)
 const token = localStorage.getItem('admin_token')
@@ -44,6 +46,11 @@ const xuLyHanhDong = async (id, hanhDong) => {
   } catch (error) {
     alert('Lỗi kết nối máy chủ!')
   }
+}
+
+const moFormHopDong = (maPhong) => {
+  localStorage.setItem('chon_phong_hop_dong', maPhong)
+  emit('chuyenTabHopDong', 'hop-dong')
 }
 
 const dinhDangNgay = (dateStr) => {
@@ -142,7 +149,7 @@ onMounted(() => layDanhSachYeuCau())
             </tr>
           </thead>
           <tbody>
-            <tr v-for="yc in danhSachDaLoc" :key="yc.id">
+            <tr v-for="yc in danhSachDaLoc" :key="yc.Ma_DatPhong">
               <td>
                 <span class="ql-dp-ma">{{ yc.ma_dat_phong }}</span>
               </td>
@@ -169,18 +176,23 @@ onMounted(() => layDanhSachYeuCau())
               </td>
               <td class="text-end">
                 <div v-if="yc.trang_thai === 'cho_xac_nhan'" class="ql-dp-actions">
-                  <button @click="xuLyHanhDong(yc.id, 'duyet')" class="ql-dp-btn-duyet" title="Duyệt yêu cầu">
+                  <button @click="xuLyHanhDong(yc.Ma_DatPhong, 'duyet')" class="ql-dp-btn-duyet" title="Duyệt yêu cầu">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     Duyệt
                   </button>
-                  <button @click="xuLyHanhDong(yc.id, 'tu-choi')" class="ql-dp-btn-huy" title="Từ chối">
+                  <button @click="xuLyHanhDong(yc.Ma_DatPhong, 'tu-choi')" class="ql-dp-btn-huy" title="Từ chối">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                       <line x1="18" y1="6" x2="6" y2="18" />
                       <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                     Từ chối
+                  </button>
+                </div>
+                <div v-else-if="yc.trang_thai === 'da_coc'" class="ql-dp-actions">
+                  <button @click="moFormHopDong(yc.Ma_Phong)" class="ql-dp-btn-duyet" style="background:#2E6E7E;" title="Lập Hợp Đồng Thuê">
+                    📄 Lập Hợp Đồng
                   </button>
                 </div>
                 <span v-else class="ql-dp-da-xu-ly">Đã xử lý</span>

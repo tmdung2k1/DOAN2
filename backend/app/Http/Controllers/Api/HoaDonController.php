@@ -18,9 +18,9 @@ class HoaDonController extends Controller
             ->update(['trang_thai' => 'qua_han']);
 
         $danhSach = DB::table('hoa_don')
-            ->join('hop_dong', 'hoa_don.hop_dong_id', '=', 'hop_dong.id')
-            ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
-            ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
+            ->join('hop_dong', 'hoa_don.Ma_HopDong', '=', 'hop_dong.Ma_HopDong')
+            ->join('phong', 'hop_dong.Ma_Phong', '=', 'phong.Ma_Phong')
+            ->join('tai_khoans', 'hop_dong.Ma_TaiKhoan', '=', 'tai_khoans.Ma_TaiKhoan')
             ->select(
                 'hoa_don.*',
                 'phong.so_phong',
@@ -39,12 +39,12 @@ class HoaDonController extends Controller
     public function layDuLieuForm()
     {
         $hopDongs = DB::table('hop_dong')
-            ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
-            ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
+            ->join('phong', 'hop_dong.Ma_Phong', '=', 'phong.Ma_Phong')
+            ->join('tai_khoans', 'hop_dong.Ma_TaiKhoan', '=', 'tai_khoans.Ma_TaiKhoan')
             ->where('hop_dong.trang_thai', 'hieu_luc')
             ->select(
-                'hop_dong.id',
-                'hop_dong.phong_id',
+                'hop_dong.Ma_HopDong',
+                'hop_dong.Ma_Phong',
                 'phong.so_phong',
                 'tai_khoans.ho_ten',
                 'hop_dong.gia_thue_hang_thang'
@@ -60,20 +60,20 @@ class HoaDonController extends Controller
             'status'    => 'success',
             'hop_dongs' => $hopDongs,
             'cai_dat'   => $caiDat,
-            'dich_vus'  => DichVu::where('active', true)->orderBy('id', 'asc')->get(),
+            'dich_vus'  => DichVu::where('active', true)->orderBy('Ma_DichVu', 'asc')->get(),
         ]);
     }
 
     public function layChiSoMoiNhat($phong_id)
     {
         $dien = DB::table('chi_so_dien_nuoc')
-            ->where('phong_id', $phong_id)
+            ->where('Ma_Phong', $phong_id)
             ->where('loai_chi_so', 'dien')
             ->orderBy('thang_ghi_nhan', 'desc')
             ->first();
 
         $nuoc = DB::table('chi_so_dien_nuoc')
-            ->where('phong_id', $phong_id)
+            ->where('Ma_Phong', $phong_id)
             ->where('loai_chi_so', 'nuoc')
             ->orderBy('thang_ghi_nhan', 'desc')
             ->first();
@@ -96,7 +96,7 @@ class HoaDonController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'hop_dong_id' => 'required|integer',
+            'Ma_HopDong' => 'required|integer',
             'thang_thanh_toan' => 'required|date',
             'han_chot' => 'required|date',
             'chi_tiet' => 'required|array'
@@ -111,7 +111,7 @@ class HoaDonController extends Controller
         try {
             $hoaDon = HoaDon::create([
                 'ma_hoa_don' => 'INV-' . time(),
-                'hop_dong_id' => $request->hop_dong_id,
+                'Ma_HopDong' => $request->Ma_HopDong,
                 'thang_thanh_toan' => $request->thang_thanh_toan,
                 'tong_tien' => $tongTien,
                 'han_chot' => $request->han_chot,
@@ -120,7 +120,7 @@ class HoaDonController extends Controller
 
             foreach ($request->chi_tiet as $item) {
                 ChiTietHoaDon::create([
-                    'hoa_don_id' => $hoaDon->id,
+                    'Ma_HoaDon' => $hoaDon->Ma_HoaDon,
                     'loai_phi' => $item['loai_phi'],
                     'so_luong' => $item['so_luong'],
                     'don_gia' => $item['don_gia'],
@@ -139,10 +139,10 @@ class HoaDonController extends Controller
     public function layChiTiet($id)
     {
         $hoaDon = DB::table('hoa_don')
-            ->join('hop_dong', 'hoa_don.hop_dong_id', '=', 'hop_dong.id')
-            ->join('phong', 'hop_dong.phong_id', '=', 'phong.id')
-            ->join('tai_khoans', 'hop_dong.khach_id', '=', 'tai_khoans.id')
-            ->where('hoa_don.id', $id)
+            ->join('hop_dong', 'hoa_don.Ma_HopDong', '=', 'hop_dong.Ma_HopDong')
+            ->join('phong', 'hop_dong.Ma_Phong', '=', 'phong.Ma_Phong')
+            ->join('tai_khoans', 'hop_dong.Ma_TaiKhoan', '=', 'tai_khoans.Ma_TaiKhoan')
+            ->where('hoa_don.Ma_HoaDon', $id)
             ->select(
                 'hoa_don.*',
                 'phong.so_phong',
@@ -156,8 +156,8 @@ class HoaDonController extends Controller
         }
 
         $chiTiet = DB::table('chi_tiet_hoa_don')
-            ->where('hoa_don_id', $id)
-            ->orderBy('id', 'asc')
+            ->where('Ma_HoaDon', $id)
+            ->orderBy('Ma_ChiTietHoaDon', 'asc')
             ->get();
 
         return response()->json([

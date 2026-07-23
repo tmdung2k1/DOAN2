@@ -11,8 +11,8 @@ class TrangChuController extends Controller
     public function danhSachPhong()
     {
         $danhSach = DB::table('phong')
-            ->join('loai_phong', 'phong.loai_phong_id', '=', 'loai_phong.id')
-            ->select('phong.id', 'phong.so_phong', 'phong.dien_tich', 'phong.gia_thue', 'phong.trang_thai', 'loai_phong.ten_loai')
+            ->join('loai_phong', 'phong.Ma_LoaiPhong', '=', 'loai_phong.Ma_LoaiPhong')
+            ->select('phong.Ma_Phong', 'phong.so_phong', 'phong.dien_tich', 'phong.gia_thue', 'phong.trang_thai', 'loai_phong.ten_loai')
             ->where('phong.trang_thai', 'trong')
             ->get();
 

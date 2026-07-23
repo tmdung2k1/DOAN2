@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('dich_vu', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_DichVu');
             $table->string('ten_dich_vu', 100);
             $table->decimal('don_gia', 12, 2)->default(0);
             $table->string('mo_ta', 255)->nullable();

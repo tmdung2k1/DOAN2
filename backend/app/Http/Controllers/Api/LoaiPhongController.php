@@ -19,7 +19,7 @@ class LoaiPhongController extends Controller
     public function store(Request $request)
     {
         $request->validate(['ten_loai' => 'required|string|unique:loai_phong,ten_loai']);
-        $loaiPhong = LoaiPhong::create($request->except('id'));
+        $loaiPhong = LoaiPhong::create($request->except('Ma_LoaiPhong'));
 
         return response()->json(['status' => 'success', 'message' => 'Thêm loại phòng thành công!', 'data' => $loaiPhong]);
     }
@@ -30,7 +30,7 @@ class LoaiPhongController extends Controller
         if (!$loaiPhong) return response()->json(['status' => 'error', 'message' => 'Không tìm thấy!'], 404);
 
         $request->validate(['ten_loai' => 'required|string']);
-        $loaiPhong->update($request->except('id'));
+        $loaiPhong->update($request->except('Ma_LoaiPhong'));
 
         return response()->json(['status' => 'success', 'message' => 'Cập nhật thành công!', 'data' => $loaiPhong]);
     }

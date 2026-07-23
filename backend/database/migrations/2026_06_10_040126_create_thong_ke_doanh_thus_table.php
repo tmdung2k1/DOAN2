@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('thong_ke_doanh_thu', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_ThongKeDoanhThu');
             $table->date('thang_nam'); // Lưu ngày mùng 1 của tháng để dễ lọc (VD: 2026-06-01)
             $table->decimal('tong_thu', 14, 2)->default(0); // Tiền thu từ hóa đơn
             $table->decimal('tong_chi', 14, 2)->default(0); // Tiền chi cho bảo trì, v.v.

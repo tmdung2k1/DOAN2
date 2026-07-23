@@ -8,6 +8,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -21,8 +22,12 @@ class DatabaseSeeder extends Seeder
     {
         $now = Carbon::now();
 
+        Schema::disableForeignKeyConstraints();
+
         // Xóa dữ liệu cũ
         TaiKhoan::truncate();
+
+        Schema::enableForeignKeyConstraints();
 
         // Tạo tài khoản Quản trị hệ thống
         $admin = TaiKhoan::create([
@@ -50,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
         //Tao mau phong de test
         DB::table('phong')->insert([
-            'loai_phong_id' => $loaiPhongId,
+            'Ma_LoaiPhong' => $loaiPhongId,
             'so_phong' => '101',
             'dien_tich' => 25.5,
             'gia_thue' => 2500000,

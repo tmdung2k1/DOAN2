@@ -16,15 +16,15 @@ class DatPhongController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'phong_id' => 'required|exists:phong,id',
+            'Ma_Phong' => 'required|exists:phong,Ma_Phong',
             'ho_ten' => 'required|string|max:100',
             'so_dien_thoai' => 'required|string|max:20',
             'email' => 'nullable|email|max:100',
             'ngay_du_kien_den' => 'required|date|after_or_equal:today',
             'ghi_chu' => 'nullable|string|max:500',
         ], [
-            'phong_id.required' => 'Vui lòng chọn phòng.',
-            'phong_id.exists' => 'Phòng không tồn tại.',
+            'Ma_Phong.required' => 'Vui lòng chọn phòng.',
+            'Ma_Phong.exists' => 'Phòng không tồn tại.',
             'ho_ten.required' => 'Vui lòng nhập họ tên.',
             'so_dien_thoai.required' => 'Vui lòng nhập số điện thoại.',
             'ngay_du_kien_den.required' => 'Vui lòng chọn ngày dự kiến đến.',
@@ -33,7 +33,7 @@ class DatPhongController extends Controller
         ]);
 
         // Kiểm tra phòng còn trống không
-        $phong = Phong::find($request->phong_id);
+        $phong = Phong::find($request->Ma_Phong);
         if ($phong->trang_thai !== 'trong') {
             return response()->json([
                 'status' => 'error',
@@ -42,14 +42,14 @@ class DatPhongController extends Controller
         }
 
         // Tạo mã đặt phòng tự động
-        $lastId = DatPhong::max('id') ?? 0;
+        $lastId = DatPhong::max('Ma_DatPhong') ?? 0;
         $maDatPhong = 'DP-' . str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
 
         // Lưu yêu cầu đặt phòng
         $datPhong = DatPhong::create([
             'ma_dat_phong' => $maDatPhong,
-            'phong_id' => $request->phong_id,
-            'khach_id' => null,
+            'Ma_Phong' => $request->Ma_Phong,
+            'Ma_TaiKhoan' => null,
             'ho_ten' => $request->ho_ten,
             'so_dien_thoai' => $request->so_dien_thoai,
             'email' => $request->email,
@@ -72,7 +72,7 @@ class DatPhongController extends Controller
     public function index()
     {
         $danhSach = DB::table('dat_phong')
-            ->join('phong', 'dat_phong.phong_id', '=', 'phong.id')
+            ->join('phong', 'dat_phong.Ma_Phong', '=', 'phong.Ma_Phong')
             ->select(
                 'dat_phong.*',
                 'phong.so_phong'
@@ -94,7 +94,7 @@ class DatPhongController extends Controller
         }
         $yeuCau->update(['trang_thai' => 'da_coc']);
 
-        Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'dat_truoc']);
+        Phong::where('Ma_Phong', $yeuCau->Ma_Phong)->update(['trang_thai' => 'dat_truoc']);
 
         return response()->json([
             'status' => 'success',
@@ -111,7 +111,7 @@ class DatPhongController extends Controller
 
         $yeuCau->update(['trang_thai' => 'huy']);
 
-        Phong::where('id', $yeuCau->phong_id)->update(['trang_thai' => 'trong']);
+        Phong::where('Ma_Phong', $yeuCau->Ma_Phong)->update(['trang_thai' => 'trong']);
 
         return response()->json([
             'status' => 'success',

@@ -10,7 +10,7 @@ class DichVuController extends Controller
 {
     public function index()
     {
-        $dichVus = DichVu::orderBy('id', 'asc')->get();
+        $dichVus = DichVu::orderBy('Ma_DichVu', 'asc')->get();
         return response()->json(['status' => 'success', 'data' => $dichVus]);
     }
 

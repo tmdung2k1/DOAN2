@@ -9,5 +9,6 @@ class TienIch extends Model
 {
     use HasFactory;
     protected $table = 'tien_ich';
+    protected $primaryKey = 'Ma_TienIch';
     protected $guarded = [];
 }

@@ -11,7 +11,7 @@ class HinhAnhPhongController extends Controller
 {
     public function layAnhCuaPhong($phong_id)
     {
-        $anh = HinhAnhPhong::where('phong_id', $phong_id)->get();
+        $anh = HinhAnhPhong::where('Ma_Phong', $phong_id)->get();
         return response()->json(['status' => 'success', 'data' => $anh]);
     }
 
@@ -28,7 +28,7 @@ class HinhAnhPhongController extends Controller
             $url = asset('storage/' . $duongDan);
 
             $anhMoi = HinhAnhPhong::create([
-                'phong_id' => $phong_id,
+                'Ma_Phong' => $phong_id,
                 'url_anh' => $url,
                 'la_anh_chinh' => false
             ]);

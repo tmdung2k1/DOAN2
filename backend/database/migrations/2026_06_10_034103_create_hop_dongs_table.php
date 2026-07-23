@@ -12,10 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hop_dong', function (Blueprint $table) {
-            $table->id();
+            $table->id('Ma_HopDong');
             $table->string('ma_hop_dong', 30)->unique();
-            $table->foreignId('phong_id')->constrained('phong');
-            $table->foreignId('khach_id')->constrained('tai_khoan');
+            $table->unsignedBigInteger('Ma_Phong');
+            $table->foreign('Ma_Phong')->references('Ma_Phong')->on('phong');
+            $table->unsignedBigInteger('Ma_TaiKhoan')->nullable();
+            $table->foreign('Ma_TaiKhoan')->references('Ma_TaiKhoan')->on('tai_khoans')->nullOnDelete();
+            
+            // Thông tin khách thuê chính (lưu trực tiếp)
+            $table->string('ten_khach_hang', 100);
+            $table->string('so_dien_thoai', 20);
+            $table->string('cccd', 20)->nullable();
+            $table->string('email', 100)->nullable();
+
             $table->date('ngay_bat_dau');
             $table->date('ngay_ket_thuc');
             $table->decimal('gia_thue_hang_thang', 12, 2);

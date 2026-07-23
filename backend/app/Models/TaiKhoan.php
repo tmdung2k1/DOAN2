@@ -10,6 +10,7 @@ class TaiKhoan extends Model
     use HasApiTokens;
 
     protected $table = 'tai_khoans';
+    protected $primaryKey = 'Ma_TaiKhoan';
 
     protected $fillable = [
         'ho_ten',

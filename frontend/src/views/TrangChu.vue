@@ -147,7 +147,7 @@ const guiDatPhong = async () => {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify({
-        phong_id: selectedPhong.value.id,
+        Ma_Phong: selectedPhong.value.Ma_Phong,
         ...bookingForm.value,
       }),
     });
@@ -391,11 +391,11 @@ const getRoomTag = (index) => {
         <div v-else class="lp-rooms-grid">
           <div
             v-for="(phong, index) in phongHienThi"
-            :key="phong.id"
+            :key="phong.Ma_Phong"
             class="lp-room-card lp-animate-in"
           >
             <div class="lp-room-img-wrap">
-              <img :src="layAnhPhong(phong.id)" :alt="'Phòng ' + phong.so_phong" />
+              <img :src="layAnhPhong(phong.Ma_Phong)" :alt="'Phòng ' + phong.so_phong" />
               <span v-if="getRoomTag(index)" class="lp-room-tag" :class="getRoomTag(index).class">
                 {{ getRoomTag(index).text }}
               </span>
@@ -447,14 +447,13 @@ const getRoomTag = (index) => {
       <div class="lp-featured-inner">
         <h2 class="lp-featured-title lp-animate-in">Bộ sưu tập nổi bật</h2>
 
-
         <div class="lp-featured-stack lp-animate-in" v-if="phongNoiBat.length > 0">
           <div
             v-for="(phong, index) in phongNoiBat"
-            :key="'featured-' + phong.id"
+            :key="'featured-' + phong.Ma_Phong"
             class="lp-featured-card"
           >
-            <img :src="layAnhPhong(phong.id)" :alt="'Phòng ' + phong.so_phong" />
+            <img :src="layAnhPhong(phong.Ma_Phong)" :alt="'Phòng ' + phong.so_phong" />
             <div class="lp-featured-card-body">
               <div class="lp-featured-card-price">
                 {{ dinhDangTien(phong.gia_thue) }} <span>/tháng</span>
@@ -538,7 +537,6 @@ const getRoomTag = (index) => {
           <ul class="lp-footer-links">
             <li><a href="#phong-tro" @click.prevent="scrollToRooms">Tìm phòng trọ</a></li>
             <li><a href="#noi-bat" @click.prevent="scrollToFeatured">Phòng nổi bật</a></li>
-
           </ul>
         </div>
 
@@ -617,7 +615,7 @@ const getRoomTag = (index) => {
           <div v-else class="booking-body">
             <!-- Thông tin phòng -->
             <div class="booking-room-info" v-if="selectedPhong">
-              <img :src="layAnhPhong(selectedPhong.id)" :alt="'Phòng ' + selectedPhong.so_phong" />
+              <img :src="layAnhPhong(selectedPhong.Ma_Phong)" :alt="'Phòng ' + selectedPhong.so_phong" />
               <div class="booking-room-details">
                 <div class="booking-room-name">Phòng {{ selectedPhong.so_phong }} - {{ selectedPhong.ten_loai }}</div>
                 <div class="booking-room-price">{{ dinhDangTienDay(selectedPhong.gia_thue) }}/tháng</div>

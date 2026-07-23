@@ -9,9 +9,10 @@ class Phong extends Model
 {
     use HasFactory;
     protected $table = 'phong';
+    protected $primaryKey = 'Ma_Phong';
     protected $fillable = [
-        'tang_id',
-        'loai_phong_id',
+        'Ma_Tang',
+        'Ma_LoaiPhong',
         'so_phong',
         'dien_tich',
         'chieu_dai',
@@ -25,16 +26,16 @@ class Phong extends Model
 
     public function loaiPhong()
     {
-        return $this->belongsTo(LoaiPhong::class, 'loai_phong_id');
+        return $this->belongsTo(LoaiPhong::class, 'Ma_LoaiPhong', 'Ma_LoaiPhong');
     }
 
     public function tang()
     {
-        return $this->belongsTo(Tang::class, 'tang_id');
+        return $this->belongsTo(Tang::class, 'Ma_Tang', 'Ma_Tang');
     }
 
     public function tienIch()
     {
-        return $this->belongsToMany(TienIch::class, 'tien_ich_phong', 'phong_id', 'tien_ich_id');
+        return $this->belongsToMany(TienIch::class, 'tien_ich_phong', 'Ma_Phong', 'Ma_TienIch');
     }
 }

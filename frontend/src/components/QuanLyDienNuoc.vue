@@ -9,7 +9,7 @@ const token = localStorage.getItem('admin_token')
 const hienThiModal = ref(false)
 const loiForm = ref('')
 const formChiSo = ref({
-  phong_id: null,
+  Ma_Phong: null,
   thang_ghi_nhan: '',
   dien_chi_so_cu: '',
   dien_chi_so_moi: '',
@@ -46,7 +46,7 @@ const layDanhSachPhong = async () => {
 const moModalThem = () => {
   const homNay = new Date().toISOString().split('T')[0]
   formChiSo.value = {
-    phong_id: null,
+    Ma_Phong: null,
     thang_ghi_nhan: homNay,
     dien_chi_so_cu: '',
     dien_chi_so_moi: '',
@@ -66,7 +66,7 @@ const luuMotChiSo = async (loai, chiSoCu, chiSoMoi) => {
       'Accept': 'application/json'
     },
     body: JSON.stringify({
-      phong_id:       formChiSo.value.phong_id,
+      Ma_Phong:       formChiSo.value.Ma_Phong,
       thang_ghi_nhan: formChiSo.value.thang_ghi_nhan,
       loai_chi_so:    loai,
       chi_so_cu:      chiSoCu,
@@ -79,7 +79,7 @@ const luuMotChiSo = async (loai, chiSoCu, chiSoMoi) => {
 const luuChiSo = async () => {
   loiForm.value = ''
 
-  if (!formChiSo.value.phong_id) {
+  if (!formChiSo.value.Ma_Phong) {
     loiForm.value = 'Vui lòng chọn phòng.'
     return
   }
@@ -172,7 +172,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="cs in danhSachChiSo" :key="cs.id">
+          <tr v-for="cs in danhSachChiSo" :key="cs.Ma_ChiSoDienNuoc">
             <td class="ps-4 fw-bold text-secondary">{{ dinhDangThang(cs.thang_ghi_nhan) }}</td>
             <td><span class="badge bg-teal-light text-teal px-2 py-1 fs-6">Phòng {{ cs.so_phong }}</span></td>
             <td>
@@ -184,7 +184,7 @@ onMounted(() => {
             <td class="text-center fw-bold text-danger">{{ cs.chi_so_moi - cs.chi_so_cu }}</td>
             <td class="text-end">{{ dinhDangTien(cs.don_gia) }}</td>
             <td class="text-end pe-4">
-              <button @click="xoaChiSo(cs.id)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
+              <button @click="xoaChiSo(cs.Ma_ChiSoDienNuoc)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
             </td>
           </tr>
         </tbody>
@@ -207,9 +207,9 @@ onMounted(() => {
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Chọn Phòng (Đang thuê)</label>
-              <select v-model.number="formChiSo.phong_id" class="form-select custom-input" required>
+              <select v-model.number="formChiSo.Ma_Phong" class="form-select custom-input" required>
                 <option :value="null" disabled>-- Chọn phòng --</option>
-                <option v-for="p in danhSachPhong" :key="p.id" :value="p.id">Phòng {{ p.so_phong }}</option>
+                <option v-for="p in danhSachPhong" :key="p.Ma_Phong" :value="p.Ma_Phong">Phòng {{ p.so_phong }}</option>
               </select>
             </div>
             <div class="col-md-6">

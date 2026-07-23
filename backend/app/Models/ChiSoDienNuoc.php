@@ -10,5 +10,6 @@ class ChiSoDienNuoc extends Model
     use HasFactory;
 
     protected $table = 'chi_so_dien_nuoc';
+    protected $primaryKey = 'Ma_ChiSoDienNuoc';
     protected $guarded = [];
 }

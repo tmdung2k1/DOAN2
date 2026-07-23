@@ -7,7 +7,7 @@ const token = localStorage.getItem('admin_token')
 
 const hienThiModal = ref(false)
 const laCheDoSua = ref(false)
-const formLoai = ref({ id: null, ten_loai: '' })
+const formLoai = ref({ Ma_LoaiPhong: null, ten_loai: '' })
 
 const layDanhSach = async () => {
   dangTai.value = true
@@ -15,6 +15,11 @@ const layDanhSach = async () => {
     const res = await fetch('http://127.0.0.1:8000/api/admin/loai-phong', {
       headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
     })
+    if (res.status === 401) {
+      localStorage.removeItem('admin_token')
+      window.location.href = '/dang-nhap'
+      return
+    }
     const result = await res.json()
     if (result.status === 'success') danhSachLoai.value = result.data
   } catch (error) { console.error(error) }
@@ -23,7 +28,7 @@ const layDanhSach = async () => {
 
 const moModalThem = () => {
   laCheDoSua.value = false
-  formLoai.value = { id: null, ten_loai: '' }
+  formLoai.value = { Ma_LoaiPhong: null, ten_loai: '' }
   hienThiModal.value = true
 }
 
@@ -34,7 +39,7 @@ const moModalSua = (loai) => {
 }
 
 const luuDuLieu = async () => {
-  const url = laCheDoSua.value ? `http://127.0.0.1:8000/api/admin/loai-phong/${formLoai.value.id}` : 'http://127.0.0.1:8000/api/admin/loai-phong'
+  const url = laCheDoSua.value ? `http://127.0.0.1:8000/api/admin/loai-phong/${formLoai.value.Ma_LoaiPhong}` : 'http://127.0.0.1:8000/api/admin/loai-phong'
   const method = laCheDoSua.value ? 'PUT' : 'POST'
   
   try {
@@ -43,11 +48,17 @@ const luuDuLieu = async () => {
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(formLoai.value)
     })
+    if (res.status === 401) {
+      alert('Phiên đăng nhập đã hết hạn hoặc token không hợp lệ. Vui lòng đăng nhập lại!')
+      localStorage.removeItem('admin_token')
+      window.location.href = '/dang-nhap'
+      return
+    }
     const result = await res.json()
     if (result.status === 'success') {
       hienThiModal.value = false
       layDanhSach()
-    } else alert('Lỗi: ' + result.message)
+    } else alert('Lỗi: ' + (result.message || 'Không thể thực hiện'))
   } catch (error) { alert('Lỗi kết nối!') }
 }
 
@@ -58,6 +69,12 @@ const xoaDuLieu = async (id, ten) => {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
     })
+    if (res.status === 401) {
+      alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!')
+      localStorage.removeItem('admin_token')
+      window.location.href = '/dang-nhap'
+      return
+    }
     if ((await res.json()).status === 'success') layDanhSach()
   } catch (error) { alert('Lỗi kết nối!') }
 }
@@ -78,18 +95,18 @@ onMounted(() => layDanhSach())
       <table v-else class="table table-hover align-middle m-0">
         <thead class="table-light text-uppercase small text-muted">
           <tr>
-            <th class="ps-4 py-3" style="width: 100px;">ID</th>
+            <th class="ps-4 py-3" style="width: 100px;">Mã</th>
             <th class="py-3">Tên Loại Phòng</th>
             <th class="text-end pe-4 py-3">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="loai in danhSachLoai" :key="loai.id">
-            <td class="ps-4 fw-bold">{{ loai.id }}</td>
+          <tr v-for="loai in danhSachLoai" :key="loai.Ma_LoaiPhong">
+            <td class="ps-4 fw-bold">{{ loai.Ma_LoaiPhong }}</td>
             <td class="fw-bold text-dark-blue">{{ loai.ten_loai }}</td>
             <td class="text-end pe-4">
               <button @click="moModalSua(loai)" class="btn btn-sm btn-outline-primary fw-bold me-2">Sửa</button>
-              <button @click="xoaDuLieu(loai.id, loai.ten_loai)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
+              <button @click="xoaDuLieu(loai.Ma_LoaiPhong, loai.ten_loai)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
             </td>
           </tr>
         </tbody>
@@ -119,4 +136,4 @@ onMounted(() => layDanhSach())
 
 <style scoped>
 @import "../assets/css/quan-ly-loai-phong.css";
-</style>
+</style>

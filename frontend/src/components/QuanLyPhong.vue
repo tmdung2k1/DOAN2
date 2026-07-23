@@ -17,7 +17,7 @@ const token = localStorage.getItem('admin_token')
 
 const hienThiModal = ref(false)
 const laCheDoSua = ref(false)
-const formPhong = ref({ id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', tang_id: null })
+const formPhong = ref({ Ma_Phong: null, so_phong: '', Ma_LoaiPhong: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', Ma_Tang: null })
 
 const danhSachFileChon = ref([])
 const xemTruocAnh = ref([])
@@ -50,7 +50,7 @@ const layDanhSachPhong = async () => {
 
 const moModalThem = () => {
   laCheDoSua.value = false
-  formPhong.value = { id: null, so_phong: '', loai_phong_id: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', tang_id: null }
+  formPhong.value = { Ma_Phong: null, so_phong: '', Ma_LoaiPhong: '', dien_tich: '', gia_thue: '', gia_coc: '', trang_thai: 'trong', Ma_Tang: null }
   danhSachFileChon.value = []
   xemTruocAnh.value = []
   hienThiModal.value = true
@@ -63,7 +63,7 @@ const moModalSua = async (phong) => {
   danhSachFileThemMoi.value = []
   xemTruocThemMoi.value = []
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.id}/hinh-anh`, {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.Ma_Phong}/hinh-anh`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const result = await res.json()
@@ -121,7 +121,7 @@ const uploadNhieuAnh = async (phongId, danhSachFile) => {
 
 const luuPhong = async () => {
   const url = laCheDoSua.value
-    ? `http://127.0.0.1:8000/api/admin/phong/${formPhong.value.id}`
+    ? `http://127.0.0.1:8000/api/admin/phong/${formPhong.value.Ma_Phong}`
     : 'http://127.0.0.1:8000/api/admin/phong'
   const method = laCheDoSua.value ? 'PUT' : 'POST'
 
@@ -134,7 +134,7 @@ const luuPhong = async () => {
     })
     const result = await response.json()
     if (result.status === 'success') {
-      const phongId = laCheDoSua.value ? formPhong.value.id : result.data.id
+      const phongId = laCheDoSua.value ? formPhong.value.Ma_Phong : result.data.Ma_Phong
       const filesToUpload = laCheDoSua.value ? danhSachFileThemMoi.value : danhSachFileChon.value
       if (filesToUpload.length > 0) await uploadNhieuAnh(phongId, filesToUpload)
       hienThiModal.value = false
@@ -168,7 +168,7 @@ const xoaPhong = async (id, soPhong) => {
 const dinhDangTien = (tien) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(tien)
 
 const layTenLoaiPhong = (loaiPhongId) => {
-  const loaiPhong = danhSachLoaiPhong.value.find(lp => lp.id === loaiPhongId)
+  const loaiPhong = danhSachLoaiPhong.value.find(lp => lp.Ma_LoaiPhong === loaiPhongId)
   return loaiPhong ? loaiPhong.ten_loai : 'Không xác định'
 }
 
@@ -201,7 +201,7 @@ const moModalTienIch = async (phong) => {
   phongDangChonTienIch.value = phong
   tienIchDuocChon.value = []
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.id}/tien-ich`, {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.Ma_Phong}/tien-ich`, {
       headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
     })
     const result = await res.json()
@@ -212,7 +212,7 @@ const moModalTienIch = async (phong) => {
 
 const luuTienIchPhong = async () => {
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phongDangChonTienIch.value.id}/tien-ich`, {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phongDangChonTienIch.value.Ma_Phong}/tien-ich`, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ tien_ich_ids: tienIchDuocChon.value })
@@ -239,7 +239,7 @@ const moModalChiTiet = async (phong) => {
   dangTaiChiTiet.value = true
   hienThiModalChiTiet.value = true
   try {
-    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.id}/hinh-anh`, {
+    const res = await fetch(`http://127.0.0.1:8000/api/admin/phong/${phong.Ma_Phong}/hinh-anh`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     const result = await res.json()
@@ -271,47 +271,53 @@ onMounted(() => {
       <table v-else class="table table-hover align-middle m-0">
         <thead class="table-light text-uppercase small text-muted">
           <tr>
-            <th class="ps-4 py-3">Số Phòng</th>
-            <th class="py-3">Loại Phòng</th>
-            <th class="py-3">Diện tích</th>
-            <th class="py-3">Giá Thuê</th>
-            <th class="py-3">Tiền Cọc</th>
+            <th class="ps-4 py-3" style="white-space: nowrap;">Số Phòng</th>
+            <th class="py-3" style="white-space: nowrap;">Loại Phòng</th>
+            <th class="py-3" style="white-space: nowrap;">Diện tích</th>
+            <th class="py-3" style="white-space: nowrap;">Giá Thuê</th>
+            <th class="py-3" style="white-space: nowrap;">Tiền Cọc</th>
             <th class="py-3">Tiện Ích</th>
-            <th class="py-3">Trạng Thái</th>
-            <th class="text-end pe-4 py-3">Thao tác</th>
+            <th class="py-3" style="white-space: nowrap;">Trạng Thái</th>
+            <th class="text-end pe-4 py-3" style="white-space: nowrap;">Thao tác</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="phong in danhSachPhong" :key="phong.id">
-            <td class="ps-4 fw-bold text-dark-blue">{{ phong.so_phong }}</td>
-            <td><span class="badge badge-loai-phong">{{ layTenLoaiPhong(phong.loai_phong_id) }}</span></td>
-            <td>{{ phong.dien_tich }} m²</td>
-            <td class="fw-bold text-danger">{{ dinhDangTien(phong.gia_thue) }}</td>
-            <td class="text-muted">{{ dinhDangTien(phong.gia_coc) }}</td>
+          <tr v-for="phong in danhSachPhong" :key="phong.Ma_Phong">
+            <td class="ps-4 fw-bold text-dark-blue" style="white-space: nowrap;">{{ phong.so_phong }}</td>
+            <td style="white-space: nowrap;"><span class="badge badge-loai-phong">{{ layTenLoaiPhong(phong.Ma_LoaiPhong) }}</span></td>
+            <td style="white-space: nowrap;">{{ phong.dien_tich }} m²</td>
+            <td class="fw-bold text-danger" style="white-space: nowrap;">{{ dinhDangTien(phong.gia_thue) }}</td>
+            <td class="text-muted" style="white-space: nowrap;">{{ dinhDangTien(phong.gia_coc) }}</td>
             <td>
-              <div class="d-flex flex-wrap gap-1">
-                <span v-if="phong.tien_ich && phong.tien_ich.length > 0" v-for="ti in phong.tien_ich" :key="ti.id" class="badge-tien-ich">{{ ti.ten_tien_ich }}</span>
+              <div class="d-flex flex-wrap gap-1 align-items-center" style="max-width: 250px;">
+                <template v-if="phong.tien_ich && phong.tien_ich.length > 0">
+                  <span v-for="ti in phong.tien_ich.slice(0, 3)" :key="ti.Ma_TienIch" class="badge-tien-ich">{{ ti.ten_tien_ich }}</span>
+                  <span 
+                    v-if="phong.tien_ich.length > 3" 
+                    class="badge-tien-ich badge-tien-ich-more" 
+                    :title="phong.tien_ich.slice(3).map(t => t.ten_tien_ich).join(', ')"
+                    @click="moModalTienIch(phong)"
+                  >+{{ phong.tien_ich.length - 3 }}</span>
+                </template>
                 <span v-else class="text-muted small fst-italic">Chưa có</span>
               </div>
             </td>
-            <td>
+            <td style="white-space: nowrap;">
               <span :class="['badge', dinhDangTrangThai(phong.trang_thai).cls]">{{ dinhDangTrangThai(phong.trang_thai).label }}</span>
             </td>
-            <td class="text-end pe-4">
-              <button @click="moModalChiTiet(phong)" class="btn btn-sm btn-secondary text-white fw-bold me-2">Chi tiết</button>
-              <button @click="moModalTienIch(phong)" class="btn btn-sm btn-info text-white fw-bold me-2">Tiện ích</button>
-              <button @click="moModalSua(phong)" class="btn btn-sm btn-outline-primary fw-bold me-2">Sửa</button>
-              <button @click="xoaPhong(phong.id, phong.so_phong)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
+            <td class="text-end pe-4" style="white-space: nowrap;">
+              <button @click="moModalChiTiet(phong)" class="btn btn-sm btn-secondary text-white fw-bold me-1">Chi tiết</button>
+              <button @click="moModalTienIch(phong)" class="btn btn-sm btn-info text-white fw-bold me-1">Tiện ích</button>
+              <button @click="moModalSua(phong)" class="btn btn-sm btn-outline-primary fw-bold me-1">Sửa</button>
+              <button @click="xoaPhong(phong.Ma_Phong, phong.so_phong)" class="btn btn-sm btn-outline-danger fw-bold">Xóa</button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-
     <div v-if="hienThiModalChiTiet" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 780px; width: 96%; max-height: 92vh; overflow-y: auto;">
-
 
         <div class="detail-header p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
           <div>
@@ -319,7 +325,7 @@ onMounted(() => {
               <span class="detail-room-icon">🏠</span>
               <div>
                 <h4 class="fw-bold text-white m-0">Phòng {{ phongChiTiet?.so_phong }}</h4>
-                <span class="badge bg-white text-purple mt-1" style="font-size:11px;">{{ layTenLoaiPhong(phongChiTiet?.loai_phong_id) }}</span>
+                <span class="badge bg-white text-purple mt-1" style="font-size:11px;">{{ layTenLoaiPhong(phongChiTiet?.Ma_LoaiPhong) }}</span>
               </div>
             </div>
           </div>
@@ -361,15 +367,13 @@ onMounted(() => {
             </div>
           </div>
 
-
           <div class="mb-4">
             <h6 class="fw-bold text-dark-blue mb-2">🔌 Tiện Ích</h6>
             <div v-if="phongChiTiet?.tien_ich && phongChiTiet.tien_ich.length > 0" class="d-flex flex-wrap gap-2">
-              <span v-for="ti in phongChiTiet.tien_ich" :key="ti.id" class="badge-tien-ich" style="font-size:13px; padding: 5px 12px;">{{ ti.ten_tien_ich }}</span>
+              <span v-for="ti in phongChiTiet.tien_ich" :key="ti.Ma_TienIch" class="badge-tien-ich" style="font-size:13px; padding: 5px 12px;">{{ ti.ten_tien_ich }}</span>
             </div>
             <p v-else class="text-muted fst-italic small">Chưa có tiện ích nào được gán.</p>
           </div>
-
 
           <div>
             <h6 class="fw-bold text-dark-blue mb-3">🖼 Hình Ảnh Phòng</h6>
@@ -379,7 +383,7 @@ onMounted(() => {
               <span class="small">Chưa có hình ảnh nào cho phòng này.</span>
             </div>
             <div v-else class="row g-2">
-              <div v-for="(anh, i) in anhChiTiet" :key="anh.id" class="col-4 col-md-3">
+              <div v-for="(anh, i) in anhChiTiet" :key="anh.Ma_HinhAnhPhong" class="col-4 col-md-3">
                 <div @click="anhLightbox = anh.url_anh" class="img-preview-wrap rounded overflow-hidden border shadow-sm" style="height:110px; cursor:zoom-in;">
                   <img :src="anh.url_anh" style="width:100%; height:100%; object-fit:cover;" />
                   <div class="img-overlay d-flex align-items-center justify-content-center">
@@ -390,13 +394,11 @@ onMounted(() => {
             </div>
           </div>
 
-
           <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
             <button @click="hienThiModalChiTiet = false; moModalTienIch(phongChiTiet)" class="btn btn-info text-white fw-bold">📦 Quản lý Tiện Ích</button>
             <button @click="hienThiModalChiTiet = false; moModalSua(phongChiTiet)" class="btn btn-purple fw-bold">✏️ Chỉnh Sửa Phòng</button>
           </div>
         </div>
-
 
         <div v-if="anhLightbox" @click="anhLightbox = null" class="lightbox-overlay d-flex align-items-center justify-content-center">
           <div @click.stop class="lightbox-inner position-relative">
@@ -406,7 +408,6 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
 
     <div v-if="hienThiModal" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 720px; width: 96%; max-height: 92vh; overflow-y: auto;">
@@ -423,9 +424,9 @@ onMounted(() => {
             </div>
             <div class="col-md-6">
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Loại Phòng</label>
-              <select v-model="formPhong.loai_phong_id" class="form-control custom-input" required>
+              <select v-model="formPhong.Ma_LoaiPhong" class="form-control custom-input" required>
                 <option value="">-- Chọn loại phòng --</option>
-                <option v-for="loaiPhong in danhSachLoaiPhong" :key="loaiPhong.id" :value="loaiPhong.id">
+                <option v-for="loaiPhong in danhSachLoaiPhong" :key="loaiPhong.Ma_LoaiPhong" :value="loaiPhong.Ma_LoaiPhong">
                   {{ loaiPhong.ten_loai }}
                 </option>
               </select>
@@ -442,7 +443,7 @@ onMounted(() => {
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Tiền Cọc</label>
               <input v-model="formPhong.gia_coc" type="number" class="form-control custom-input" required>
             </div>
-            <div class="col-md-12">
+            <div class="col-12">
               <label class="form-label small fw-bold text-dark-blue text-uppercase">Trạng Thái Phòng</label>
               <select v-model="formPhong.trang_thai" class="form-control custom-input" required>
                 <option value="trong">Trống</option>
@@ -452,13 +453,11 @@ onMounted(() => {
               </select>
             </div>
 
-
             <div v-if="!laCheDoSua" class="col-12">
               <div class="section-anh-header d-flex justify-content-between align-items-center mb-2">
                 <label class="form-label small fw-bold text-dark-blue text-uppercase m-0">🖼 Hình Ảnh Phòng</label>
                 <span class="badge bg-secondary">{{ xemTruocAnh.length }} ảnh đã chọn</span>
               </div>
-
 
               <label for="input-anh-them" class="upload-zone d-flex flex-column align-items-center justify-content-center gap-2 rounded border-2 border-dashed p-4 mb-3" style="cursor:pointer; border-color:#c4b5fd; background: #faf5ff;">
                 <span style="font-size:2rem;">📁</span>
@@ -466,7 +465,6 @@ onMounted(() => {
                 <span class="text-muted" style="font-size:11px;">PNG, JPG, WEBP – Tối đa 5MB/ảnh – Có thể chọn nhiều ảnh</span>
                 <input type="file" id="input-anh-them" @change="chonNhieuAnh" accept="image/png,image/jpeg,image/jpg,image/webp" multiple class="d-none">
               </label>
-
 
               <div v-if="xemTruocAnh.length > 0" class="row g-2">
                 <div v-for="(src, i) in xemTruocAnh" :key="i" class="col-4 col-md-3 position-relative">
@@ -479,7 +477,6 @@ onMounted(() => {
                   <span class="d-block text-center text-muted mt-1" style="font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Ảnh {{ i + 1 }}</span>
                 </div>
 
-
                 <div class="col-4 col-md-3">
                   <label for="input-anh-them" class="add-more-btn d-flex flex-column align-items-center justify-content-center border rounded gap-1" style="height:110px; cursor:pointer; border-style:dashed; border-color:#c4b5fd; background:#faf5ff;">
                     <span style="font-size:1.6rem; color:#7c3aed;">＋</span>
@@ -489,20 +486,18 @@ onMounted(() => {
               </div>
             </div>
 
-
             <div v-if="laCheDoSua" class="col-12">
               <div class="section-anh-header d-flex justify-content-between align-items-center mb-3">
                 <label class="form-label small fw-bold text-dark-blue text-uppercase m-0">🖼 Hình Ảnh Phòng</label>
                 <span class="badge bg-secondary">{{ danhSachAnhHienCo.length }} ảnh hiện có</span>
               </div>
 
-
               <div v-if="danhSachAnhHienCo.length > 0" class="row g-2 mb-3">
-                <div v-for="(anh, i) in danhSachAnhHienCo" :key="anh.id" class="col-4 col-md-3 position-relative">
+                <div v-for="(anh, i) in danhSachAnhHienCo" :key="anh.Ma_HinhAnhPhong" class="col-4 col-md-3 position-relative">
                   <div class="img-preview-wrap rounded overflow-hidden border shadow-sm" style="height:110px;">
                     <img :src="anh.url_anh" style="width:100%; height:100%; object-fit:cover;" />
                     <div class="img-overlay d-flex align-items-center justify-content-center">
-                      <button type="button" @click="xoaAnhHienCo(anh.id, i)" class="btn btn-sm btn-danger rounded-circle px-2 py-1 fw-bold" style="font-size:12px;">✕</button>
+                      <button type="button" @click="xoaAnhHienCo(anh.Ma_HinhAnhPhong, i)" class="btn btn-sm btn-danger rounded-circle px-2 py-1 fw-bold" style="font-size:12px;">✕</button>
                     </div>
                   </div>
                   <span class="d-block text-center text-muted mt-1" style="font-size:10px;">Ảnh {{ i + 1 }}</span>
@@ -512,7 +507,6 @@ onMounted(() => {
                 <span style="font-size:1.5rem;">🖼️</span><br>
                 <span class="small">Phòng này chưa có ảnh nào</span>
               </div>
-
 
               <div class="border-top pt-3">
                 <p class="small fw-bold text-dark-blue mb-2">Thêm ảnh mới:</p>
@@ -547,7 +541,6 @@ onMounted(() => {
       </div>
     </div>
 
-
     <div v-if="hienThiModalTienIch" class="modal-overlay d-flex justify-content-center align-items-center">
       <div class="modal-content bg-white rounded shadow-lg" style="max-width: 520px; width: 100%;">
         <div class="d-flex justify-content-between align-items-center p-4 text-white" style="background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 12px 12px 0 0;">
@@ -559,27 +552,27 @@ onMounted(() => {
 
         <div class="p-4">
           <div v-if="danhSachTatCaTienIch.length === 0" class="text-center text-muted py-3">
-          Chưa có tiện ích nào trong kho. Vui lòng thêm tiện ích trước.
-        </div>
+            Chưa có tiện ích nào trong kho. Vui lòng thêm tiện ích trước.
+          </div>
 
-        <form v-else @submit.prevent="luuTienIchPhong">
-          <div class="row g-3">
-            <div v-for="ti in danhSachTatCaTienIch" :key="ti.id" class="col-md-6">
-              <div class="form-check custom-checkbox">
-                <input class="form-check-input" type="checkbox" :value="ti.id" :id="'ti_' + ti.id" v-model="tienIchDuocChon">
-                <label class="form-check-label fw-bold text-secondary" :for="'ti_' + ti.id">{{ ti.ten_tien_ich }}</label>
+          <form v-else @submit.prevent="luuTienIchPhong">
+            <div class="row g-3">
+              <div v-for="ti in danhSachTatCaTienIch" :key="ti.Ma_TienIch" class="col-md-6">
+                <div class="form-check custom-checkbox">
+                  <input class="form-check-input" type="checkbox" :value="ti.Ma_TienIch" :id="'ti_' + ti.Ma_TienIch" v-model="tienIchDuocChon">
+                  <label class="form-check-label fw-bold text-secondary" :for="'ti_' + ti.Ma_TienIch">{{ ti.ten_tien_ich }}</label>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="d-flex justify-content-end pt-4 mt-4 border-top">
-            <button type="button" @click="hienThiModalTienIch = false" class="btn btn-light fw-bold me-2">Hủy</button>
-            <button type="submit" class="btn btn-purple fw-bold px-4">Lưu Tiện Ích</button>
-          </div>
-        </form>
+            <div class="d-flex justify-content-end pt-4 mt-4 border-top">
+              <button type="button" @click="hienThiModalTienIch = false" class="btn btn-light fw-bold me-2">Hủy</button>
+              <button type="submit" class="btn btn-purple fw-bold px-4">Lưu Tiện Ích</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <teleport to="body">
     <div class="toast-container">

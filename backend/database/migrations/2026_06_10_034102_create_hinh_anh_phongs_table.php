@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hinh_anh_phong', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('phong_id')->constrained('phong')->onDelete('cascade');
+            $table->id('Ma_HinhAnhPhong');
+            $table->unsignedBigInteger('Ma_Phong');
+            $table->foreign('Ma_Phong')->references('Ma_Phong')->on('phong')->onDelete('cascade');
             $table->string('url_anh', 500);
             $table->boolean('la_anh_chinh')->default(0);
             $table->timestamps();

@@ -110,3 +110,17 @@
   border: 1px solid #b2e8e2;
   white-space: nowrap;
 }
+
+.badge-tien-ich-more {
+  background-color: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.badge-tien-ich-more:hover {
+  background-color: #2E6E7E;
+  color: #ffffff;
+  border-color: #2E6E7E;
+}

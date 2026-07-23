@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('danh_gia', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('phong_id')->constrained('phong');
-            $table->foreignId('khach_id')->constrained('tai_khoan');
+            $table->id('Ma_DanhGia');
+            $table->unsignedBigInteger('Ma_Phong');
+            $table->foreign('Ma_Phong')->references('Ma_Phong')->on('phong');
+            $table->unsignedBigInteger('Ma_TaiKhoan');
+            $table->foreign('Ma_TaiKhoan')->references('Ma_TaiKhoan')->on('tai_khoans')->onDelete('restrict');
             $table->unsignedTinyInteger('diem_danh_gia');
             $table->text('binh_luan')->nullable();
             $table->timestamps();
